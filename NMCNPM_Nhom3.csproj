@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\assets\resources\" />
+    <Folder Include="ScriptSQL\" />
   </ItemGroup>
 
 </Project>
