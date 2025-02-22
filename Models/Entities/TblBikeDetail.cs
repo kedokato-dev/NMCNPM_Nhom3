@@ -13,8 +13,6 @@ public partial class TblBikeDetail
 
     public decimal FWeight { get; set; }
 
-    public int IQuantity { get; set; }
-
     public int FkIdBikeBrand { get; set; }
 
     public int FkIdBikeType { get; set; }
