@@ -42,7 +42,7 @@ namespace NMCNPM_Nhom3.Controllers
                 HttpContext.Session.SetString("AccountName", acc.SAccountName); 
                 HttpContext.Session.SetString("PhoneNumber", acc.SPhoneNumber);
                 HttpContext.Session.SetString("Permissions", acc.SPermissions.ToString());
-                return Json(new { message = "Đăng nhập thành công" + acc.SAccountName, redirectUrl = "/Home/Index" });
+                return Json(new { message = "Đăng nhập thành công, WellCome:  " + acc.SAccountName, redirectUrl = "/Home/Index" });
             }
         }
 
