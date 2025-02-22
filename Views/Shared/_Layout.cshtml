@@ -29,7 +29,14 @@
                         <!-- Hiển thị thông tin người dùng và nút đăng xuất nếu đã đăng nhập -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Xin chào, @Context.Session.GetString("AccountName")
+                                @if (Context.Session.GetString("Permissions") == "0")
+                                {
+                                    @:Admin: @Context.Session.GetString("AccountName")
+                                }
+                                else
+                                {
+                                    @:Xin chào @Context.Session.GetString("AccountName")
+                                }
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="/Profile">Profile</a></li>
@@ -38,6 +45,7 @@
                             </ul>
                         </li>
                     }
+
                     else
                     {
                         <!-- Hiển thị nút đăng nhập và đăng ký nếu chưa đăng nhập -->
