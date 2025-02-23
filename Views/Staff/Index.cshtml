@@ -31,7 +31,7 @@
                             <td>@item.SAccountName</td>
                             <td>
                                 @{
-                                    string role = item.SPermissions switch
+                                    string role = item.FkIdPermission switch
                                     {
                                         0 => "Quản lý",
                                         1 => "Nhân viên",

@@ -28,11 +28,11 @@
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="SPermissions" class="form-label">Loại tài khoản</label>
-                    <select asp-for="SPermissions" class="form-select" required>
-                        <option value="0" selected="@(Model.SPermissions == 0)">Quản lý</option>
-                        <option value="1" selected="@(Model.SPermissions == 1)">Nhân viên</option>
-                        <option value="2" selected="@(Model.SPermissions == 2)">Khách hàng</option>
+                    <label asp-for="FkIdPermission" class="form-label">Loại tài khoản</label>
+                    <select asp-for="FkIdPermission" class="form-select" required>
+                        <option value="0" selected="@(Model.FkIdPermission == 0)">Quản lý</option>
+                        <option value="1" selected="@(Model.FkIdPermission == 1)">Nhân viên</option>
+                        <option value="2" selected="@(Model.FkIdPermission == 2)">Khách hàng</option>
                     </select>
                 </div>
 

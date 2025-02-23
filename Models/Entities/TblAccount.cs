@@ -18,7 +18,7 @@ public partial class TblAccount
 
     public DateTime DDate { get; set; }
 
-    public int SPermissions  { get; set; }
+    public int FkIdPermission  { get; set; }
 
     [Required]
     [RegularExpression(@"^\d{12}$", ErrorMessage = "Căn cước công dân phải có đúng 12 số")]
@@ -30,6 +30,6 @@ public partial class TblAccount
     public string SPassword { get; set; } = null!;
 
 
-    public virtual TblPermission? SPermissionsNavigation { get; set; }
+    public virtual TblPermission? FkIdPermissionNavigation { get; set; }
 
 }

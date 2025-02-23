@@ -8,8 +8,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Account/Login";   // Đường dẫn login
-        options.LogoutPath = "/Account/Logout"; // Đường dẫn logout
+        options.LoginPath = "/Home";   // Đường dẫn login
+        options.LogoutPath = "/Home"; // Đường dẫn logout
         options.AccessDeniedPath = "/Account/AccessDenied"; // Trang từ chối truy cập
         options.Cookie.Name = "CookieAuth";   // Tên cookie
         options.Cookie.HttpOnly = true;        // Ngăn JavaScript truy cập cookie

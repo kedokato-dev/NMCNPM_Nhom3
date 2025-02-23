@@ -89,7 +89,7 @@ namespace NMCNPM_Nhom3.Controllers
                 existingAccount.SAccountName = account.SAccountName;
                 existingAccount.SPhoneNumber = account.SPhoneNumber;
                 existingAccount.DDate = account.DDate;
-                existingAccount.SPermissions = account.SPermissions;
+                existingAccount.FkIdPermission = account.FkIdPermission;
                 existingAccount.SUserIdentification = account.SUserIdentification;
 
                 // Nếu có mật khẩu mới thì mã hóa và lưu, nếu không thì giữ nguyên mật khẩu cũ
