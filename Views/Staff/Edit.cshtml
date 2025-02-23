@@ -1,0 +1,54 @@
+﻿@model NMCNPM_Nhom3.Models.Entities.TblAccount
+@{
+    ViewData["Title"] = "Chỉnh sửa tài khoản";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h3 class="text-center mb-4">Chỉnh sửa tài khoản</h3>
+
+            <form asp-action="Edit" method="post">
+                <!-- Truyền ID ẩn -->
+                <input type="hidden" asp-for="PkIdUser" />
+
+                <div class="mb-3">
+                    <label asp-for="SAccountName" class="form-label">Họ và tên</label>
+                    <input asp-for="SAccountName" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="SPhoneNumber" class="form-label">Số điện thoại</label>
+                    <input asp-for="SPhoneNumber" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="DDate" class="form-label">Ngày sinh</label>
+                    <input asp-for="DDate" type="date" class="form-control" value="@Model.DDate.ToString("yyyy-MM-dd")" required>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="SPermissions" class="form-label">Loại tài khoản</label>
+                    <select asp-for="SPermissions" class="form-select" required>
+                        <option value="0" selected="@(Model.SPermissions == 0)">Quản lý</option>
+                        <option value="1" selected="@(Model.SPermissions == 1)">Nhân viên</option>
+                        <option value="2" selected="@(Model.SPermissions == 2)">Khách hàng</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="SUserIdentification" class="form-label">Số CCCD</label>
+                    <input asp-for="SUserIdentification" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="SPassword" class="form-label">Mật khẩu mới (để trống nếu không đổi)</label>
+                    <input asp-for="SPassword" class="form-control" placeholder="Nhập mật khẩu mới nếu muốn đổi">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+            </form>
+        </div>
+    </div>
+</div>
