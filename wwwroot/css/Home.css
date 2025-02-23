@@ -1,0 +1,7 @@
+﻿.banner-content h1 {
+    font-size: 4rem; /* Tăng cỡ chữ lên gấp 3 */
+}
+
+.banner-content p {
+    font-size: 1rem; /* Tăng cỡ chữ của đoạn mô tả */
+}
