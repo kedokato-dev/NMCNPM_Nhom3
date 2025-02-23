@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NMCNPM_Nhom3.Models;
 
@@ -12,9 +14,10 @@ namespace NMCNPM_Nhom3.Controllers
         {
             _logger = logger;
         }
-
+        //[Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
+            //var s = User.FindFirst(ClaimTypes.Role).Value;
             return View();
         }
 

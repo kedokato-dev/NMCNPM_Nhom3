@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var isAuthenticated = User.Identity.IsAuthenticated;
+    var username = User.Identity.Name;
+    var role = User.FindFirst(ClaimTypes.Role)?.ValueType ?? "ban";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -20,7 +27,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-					@if (Context.Session.GetString("Permissions") == "0")
+					@if (role == "Admin")
 					{
 						<!-- Hiển thị menu quản trị viên nếu là quản trị viên -->
 						<li class="nav-item"><a class="nav-link" href="/Staff">Quản lý nhân viên</a></li>
@@ -33,20 +40,14 @@
 
                 </ul>
                 <ul class="navbar-nav">
-                    @if (!string.IsNullOrEmpty(Context.Session.GetString("AccountName")))
+                    @if (isAuthenticated)
                     {
                         <!-- Hiển thị thông tin người dùng và nút đăng xuất nếu đã đăng nhập -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src="/path/to/avatar.jpg" alt="Avatar" class="rounded-circle" width="30" height="30">
-                                @if (Context.Session.GetString("Permissions") == "0")
-                                {
-                                    @:Admin: @Context.Session.GetString("AccountName")
-                                }
-                                else
-                                {
-                                    @:Xin chào @Context.Session.GetString("AccountName")
-                                }
+                                @role : @username
+                                
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="/Profile">Profile</a></li>

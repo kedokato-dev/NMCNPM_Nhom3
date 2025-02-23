@@ -1,8 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NMCNPM_Nhom3.Models.Entities;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpContextAccessor();
+//CookieAuthentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";   // Đường dẫn login
+        options.LogoutPath = "/Account/Logout"; // Đường dẫn logout
+        options.AccessDeniedPath = "/Account/AccessDenied"; // Trang từ chối truy cập
+        options.Cookie.Name = "CookieAuth";   // Tên cookie
+        options.Cookie.HttpOnly = true;        // Ngăn JavaScript truy cập cookie
+        options.ExpireTimeSpan = TimeSpan.FromDays(5); // Hết hạn sau 30 phút
+        options.SlidingExpiration = true; // Reset lại thời gian nếu user hoạt động
+    });
 
+builder.Services.AddAuthorization();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<NmcnpmContext>(options =>

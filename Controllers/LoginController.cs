@@ -1,7 +1,10 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using NMCNPM_Nhom3.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace NMCNPM_Nhom3.Controllers
 {
@@ -14,42 +17,42 @@ namespace NMCNPM_Nhom3.Controllers
         {
             _context = context;
         }
-
         public IActionResult Login()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
         [HttpPost]
-        public IActionResult Login(TblAccount account)
+        public async Task<IActionResult> Login(string username, string password)
         {
-            if (account == null || string.IsNullOrEmpty(account.SPhoneNumber) || string.IsNullOrEmpty(account.SPassword))
+            var user = _context.TblAccounts.Include(u => u.SPermissionsNavigation).FirstOrDefault(u => u.SPhoneNumber == username && u.SPassword == password);
+            if (user == null)
             {
-                return Json(new { message = "Vui lòng nhập đầy đủ thông tin.", redirectUrl = "" });
+                ViewBag.Message = "Invalid login credentials.";
+                return View();
             }
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.SAccountName),
+                new Claim("Phone", user.SPhoneNumber),
+                new Claim(ClaimTypes.Role,  user.SPermissionsNavigation?.SPermissionn??"ban")
+            };
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
 
-            var acc = _context.TblAccounts
-                .AsNoTracking()
-                .FirstOrDefault(a => a.SPhoneNumber == account.SPhoneNumber && a.SPassword == account.SPassword);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            if (acc == null)
-            {
-                return Json(new { message = "Tài khoản hoặc mật khẩu không đúng.", redirectUrl = "" });
-            }
-            else
-            {
-                HttpContext.Session.SetString("AccountId", acc.PkIdUser.ToString()); 
-                HttpContext.Session.SetString("AccountName", acc.SAccountName); 
-                HttpContext.Session.SetString("PhoneNumber", acc.SPhoneNumber);
-                HttpContext.Session.SetString("Permissions", acc.SPermissions.ToString());
-                return Json(new { message = "Đăng nhập thành công, WellCome:  " + acc.SAccountName, redirectUrl = "/Home/Index" });
-            }
+            return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            HttpContext.Session.Clear();
-            return RedirectToAction("Index", "Home");
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login");
         }
 
     }
