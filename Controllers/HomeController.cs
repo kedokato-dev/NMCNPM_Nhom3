@@ -58,6 +58,20 @@ namespace NMCNPM_Nhom3.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
         }
+        public async Task<IActionResult> Details(int id)
+        {
+            var bike = await _context.TblBikes
+        .Include(b => b.FkIdBikeDetailNavigation)
+            .ThenInclude(d => d.FkIdBikeTypeNavigation) // Load loại xe
+        .Include(b => b.FkIdBikeDetailNavigation)
+            .ThenInclude(d => d.FkIdBikeBrandNavigation) // Load hãng xe
+        .FirstOrDefaultAsync(b => b.PkIdBike == id);
+            if (bike == null || bike.FkIdBikeDetailNavigation == null)
+            {
+                return NotFound();
+            }
+            return  View(bike);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

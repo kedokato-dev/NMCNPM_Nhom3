@@ -31,47 +31,51 @@
             <!-- Card i -->
             <div class="col">
                 <div class="card shadow-lg rounded-4 border-0 h-100">
-                    <img src="./assets/resources/bike.png" class="card-img-top rounded-top-4" alt="@bike.SName">
-                    <div class="card-body text-center">
-                        <h5 class="card-title fw-bold">@bike.SName</h5>
+                    <a asp-controller="Home" asp-action="Details" asp-route-id="@bike.PkIdBike" class="text-decoration-none text-dark">
+                        <img src="./assets/resources/bike.png" class="card-img-top rounded-top-4" alt="@bike.SName">
+                    </a>
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">@bike.SName</h5>
 
-                        <!-- Tình trạng xe -->
-                        <p class="card-text text-muted">
-                            Tình trạng:
-                            <strong class="@(bike.SStatus == "Mới" ? "text-success" : bike.SStatus == "Cũ" ? "text-warning" : "text-secondary")">
-                                @bike.SStatus
-                            </strong>
-                        </p>
+                            <!-- Tình trạng xe -->
+                            <p class="card-text text-muted">
+                                Tình trạng:
+                                <strong class="@(bike.SStatus == "Mới" ? "text-success" : bike.SStatus == "Cũ" ? "text-warning" : "text-secondary")">
+                                    @bike.SStatus
+                                </strong>
+                            </p>
 
-                        <!-- Trạng thái xe -->
-                        <p class="card-text text-muted">
-                            Trạng thái:
-                            <strong class="@(bike.SCondition == "Đã thuê" ? "text-danger" : "text-primary")">
-                                @(bike.SCondition == "Đã thuê" ? "Đã thuê" : "Chưa thuê")
-                            </strong>
-                        </p>
+                            <!-- Trạng thái xe -->
+                            <p class="card-text text-muted">
+                                Trạng thái:
+                                <strong class="@(bike.SCondition == "Đã thuê" ? "text-danger" : "text-primary")">
+                                    @(bike.SCondition == "Đã thuê" ? "Đã thuê" : "Chưa thuê")
+                                </strong>
+                            </p>
 
-                        <!-- Giá thuê -->
-                        <p class="card-text text-muted">
-                            Giá:
-                            <strong class="text-danger">@string.Format("{0:N0}", @bike.FRentalPrice) VNĐ/Giờ</strong>
-                        </p>
+                            <!-- Giá thuê -->
+                            <p class="card-text text-muted">
+                                Giá:
+                                <strong class="text-danger">@string.Format("{0:N0}", @bike.FRentalPrice) VNĐ/Giờ</strong>
+                            </p>
 
-                        <!-- Nút Đặt ngay, chỉ hiển thị nếu xe chưa thuê -->
-                        @if (bike.SCondition == "Chưa thuê")
-                        {
-                            <button class="btn btn-primary w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#registerModal">🚴 Đặt ngay</button>
-                        }
-                        else
-                        {
-                            <button class="btn btn-secondary w-100 rounded-pill" disabled>🚳 Đã thuê</button>
-                        }
-                    </div>
+                            <!-- Nút Đặt ngay, chỉ hiển thị nếu xe chưa thuê -->
+                            @if (bike.SCondition == "Chưa thuê")
+                            {
+                            <button class="btn btn-primary w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#maintenanceModal">🚴 Đặt ngay</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary w-100 rounded-pill" disabled>🚳 Đã thuê</button>
+                            }
+                        </div>
+                    
+                    
                 </div>
+                
             </div>
-        }
 
-        
+        }
        
     </div>
     
