@@ -1,0 +1,80 @@
+﻿@model NMCNPM_Nhom3.Models.Entities.TblBike
+
+@{
+    ViewData["Title"] = "Chi tiết xe";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="fw-bold text-primary text-center">🚲 Thông tin xe</h2>
+        <hr>
+
+        <div class="row">
+            <!-- Hình ảnh -->
+            <div class="col-md-6 text-center">
+                <img src="~/assets/resources/bike.png" class="img-fluid rounded shadow" alt="@Model.SName">
+            </div>
+
+            <!-- Thông tin xe -->
+            <div class="col-md-6">
+                <p><strong class="text-dark">📌 Tên xe:</strong> <span class="fw-bold">@Model.SName</span></p>
+                <p>
+                    <strong class="text-dark">📍 Tình trạng:</strong>
+                    <span class="fw-bold @(Model.SStatus == "Mới" ? "text-success" : "text-warning")">@Model.SStatus</span>
+                </p>
+                <p>
+                    <strong class="text-dark">🔄 Trạng thái:</strong>
+                    <span class="fw-bold @(Model.SCondition == "Đã thuê" ? "text-danger" : "text-primary")">
+                        @(Model.SCondition == "Đã thuê" ? "Đã thuê" : "Chưa thuê")
+                    </span>
+                </p>
+                <p>
+                    <strong class="text-dark">💰 Giá thuê:</strong>
+                    <span class="fw-bold text-danger fs-5">@string.Format("{0:N0}", Model.FRentalPrice) VNĐ/Giờ</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Thông tin chi tiết từ TblBikeDetail -->
+        @if (Model.FkIdBikeDetailNavigation != null)
+        {
+            <hr>
+            <h4 class="fw-bold text-primary text-center">📖 Thông tin chi tiết</h4>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <p>
+                        <strong class="text-success">🛵 Loại xe:</strong>
+                        <span class="fw-bold text-dark">@Model.FkIdBikeDetailNavigation.FkIdBikeTypeNavigation.SType</span>
+                    </p>
+                    <p>
+                        <strong class="text-warning">🏭 Hãng sản xuất:</strong>
+                        <span class="fw-bold text-dark">@Model.FkIdBikeDetailNavigation.FkIdBikeBrandNavigation.SName</span>
+                    </p>
+                </div>
+
+                <div class="col-md-6">
+                    <p>
+                        <strong class="text-danger">📜 Mô tả:</strong>
+                        <span class="fw-bold text-info">Xe này bất tử cân mọi hỏng hóc nhé mọi người</span>
+                    </p>
+                    <p>
+                        <strong class="text-primary">⚙ Đặc điểm kỹ thuật:</strong>
+                        <span class="fw-bold text-dark">Xe này có sức mạnh vô song đạp không biết mệt là gì</span>
+                    </p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted fst-italic text-center">⚠ Không có thông tin chi tiết cho xe này.</p>
+        }
+
+        <hr>
+
+        <!-- Nút quay lại -->
+        <div class="text-center">
+            <a asp-action="Index" class="btn btn-outline-dark rounded-pill px-4">⬅ Quay lại</a>
+        </div>
+    </div>
+</div>
