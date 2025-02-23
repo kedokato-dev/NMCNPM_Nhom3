@@ -39,16 +39,14 @@
                     }
 
                 </ul>
-                <ul class="navbar-nav">
+                <ul class="navbar-nav align-items-center">
                     @if (isAuthenticated)
                     {
-                        <!-- Hiển thị thông tin người dùng và nút đăng xuất nếu đã đăng nhập -->
+                        <!-- Nếu đã đăng nhập -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src=".//assets/resources/avatar.png" alt="Avatar" class="rounded-circle me-2" width="30" height="30">
-                                @username
-                                
-
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="~/assets/resources/avatar.png" alt="Avatar" class="rounded-circle me-2" width="35" height="35">
+                                <span class="fw-bold">@username</span>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="/Profile">Profile</a></li>
@@ -57,16 +55,67 @@
                             </ul>
                         </li>
                     }
-
                     else
                     {
-                        <li class="nav-item"><a class="btn btn-outline-primary me-2" href="/Login/Login">Đăng nhập</a></li>
-                        <li class="nav-item"><a class="btn btn-primary" href="/Register">Đăng ký</a></li>
+                        <!-- Nếu chưa đăng nhập -->
+                        <li class="nav-item me-2">
+                            <button type="button" class="btn btn-outline-primary px-4 rounded-pill fw-semibold" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                Đăng nhập
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button" class="btn btn-primary px-4 rounded-pill fw-semibold" data-bs-toggle="modal" data-bs-target="#registerModal">
+                                Đăng ký
+                            </button>
+                        </li>
                     }
                 </ul>
+
             </div>
         </div>
     </nav>
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Đăng nhập</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="loginError" class="alert alert-danger d-none"></div> <!-- Thông báo lỗi -->
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Tên đăng nhập</label>
+                            <input type="text" class="form-control" name="username" id="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control" name="password" id="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Thông báo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1513/1513674.png" alt="Under Development" width="80">
+                    <p class="mt-3 fw-bold">Chức năng đang phát triển!</p>
+                    <p>Vui lòng quay lại sau.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="content">
         @RenderBody()
@@ -74,7 +123,6 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @RenderSection("Scripts", required: false)
-    </div>
 
     <footer class="bg-white text-dark text-center py-3 mt-4 border-top">
         <div class="container">
@@ -84,5 +132,30 @@
 
    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#loginForm").submit(function (event) {
+                event.preventDefault(); // Ngăn form reload trang
+
+                $.ajax({
+                    url: "/Home/Login",
+                    type: "POST",
+                    data: $(this).serialize(), // Lấy dữ liệu form
+                    success: function (response) {
+                        if (response.success) {
+                            location.reload(); // Đăng nhập thành công, reload trang
+                        } else {
+                            $("#loginError").text(response.message).removeClass("d-none"); // Hiển thị lỗi
+                        }
+                    }
+                });
+            });
+            // Khi modal được mở lại, reset thông báo lỗi
+            $("#loginModal").on("shown.bs.modal", function () {
+                $("#loginError").addClass("d-none").text("");
+            });
+        });
+    </script>
 </body>
+
 </html>
