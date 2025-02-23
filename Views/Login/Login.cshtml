@@ -12,12 +12,14 @@
                 <form id="loginForm" asp-action="Login" method="post">
                     <div class="mb-3">
                         <label for="username" class="form-label">Tên đăng nhập</label>
-                        <input class="form-control" name="username" id="username" required>
+                        <input type="text" class="form-control" name="username" id="username"
+                               autocomplete="username" required>
                     </div>
                     <div class="mb-3 position-relative">
                         <label for="password" class="form-label">Mật khẩu</label>
                         <div class="input-group">
-                            <input  type="password" class="form-control" id="password" name="password" required>
+                            <input type="password" class="form-control" id="password" name="password"
+                                   autocomplete="current-password" required>
                             <button class="btn btn-outline-secondary" type="button" id="togglePassword">
                                 <i class="bi bi-eye"></i>
                             </button>
@@ -26,13 +28,13 @@
                     @if (ViewBag.Message != null)
                     {
                         <div class="alert alert-danger">@ViewBag.Message</div>
-                        <p>Hello</p>
                     }
                     <button type="submit" class="btn btn-primary w-100" id="loginButton">Đăng nhập</button>
                     <div class="text-center mt-3">
                         <a href="/Account/Register">Chưa có tài khoản? Đăng ký</a>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
