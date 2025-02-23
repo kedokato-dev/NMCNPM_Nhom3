@@ -39,7 +39,6 @@ public partial class NmcnpmContext : DbContext
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile("appsettings.json")
                 .Build();
-
             string connectionString = configuration.GetConnectionString("DefaultConnection");
             optionsBuilder.UseSqlServer(connectionString);
         }
@@ -79,7 +78,6 @@ public partial class NmcnpmContext : DbContext
 
             entity.ToTable("tblBike");
 
-            entity.Property(e => e.PkIdBike).ValueGeneratedNever();
             entity.Property(e => e.FDeposit).HasColumnName("fDeposit");
             entity.Property(e => e.FRentalPrice).HasColumnName("fRentalPrice");
             entity.Property(e => e.SCondition)
@@ -104,11 +102,11 @@ public partial class NmcnpmContext : DbContext
 
         modelBuilder.Entity<TblBikeBrand>(entity =>
         {
-            entity.HasKey(e => e.PkIdBikeBrand).HasName("PK__tblBikeB__02E62FE1D15750EC");
+            entity.HasKey(e => e.PkIdBikeBrand).HasName("PK__tblBikeB__02E62FE1582632C6");
 
             entity.ToTable("tblBikeBrand");
 
-            entity.HasIndex(e => e.SName, "UQ__tblBikeB__79DF5959247FAE42").IsUnique();
+            entity.HasIndex(e => e.SName, "UQ__tblBikeB__79DF5959CE8BA688").IsUnique();
 
             entity.Property(e => e.SName)
                 .HasMaxLength(20)
@@ -117,14 +115,13 @@ public partial class NmcnpmContext : DbContext
 
         modelBuilder.Entity<TblBikeDetail>(entity =>
         {
-            entity.HasKey(e => e.PkIdBikeDetail).HasName("PK__tblBikeD__9596CA9390D2E280");
+            entity.HasKey(e => e.PkIdBikeDetail).HasName("PK__tblBikeD__9596CA93FF0BB9D9");
 
             entity.ToTable("tblBikeDetail");
 
             entity.Property(e => e.FWeight)
                 .HasColumnType("decimal(5, 2)")
                 .HasColumnName("fWeight");
-            //entity.Property(e => e.IQuantity).HasColumnName("iQuantity");
             entity.Property(e => e.SFrameSize)
                 .HasMaxLength(50)
                 .HasColumnName("sFrameSize");
@@ -145,11 +142,11 @@ public partial class NmcnpmContext : DbContext
 
         modelBuilder.Entity<TblBikeType>(entity =>
         {
-            entity.HasKey(e => e.PkIdBikeType).HasName("PK__tblBikeT__A92939E08D258314");
+            entity.HasKey(e => e.PkIdBikeType).HasName("PK__tblBikeT__A92939E0508A3CCC");
 
             entity.ToTable("tblBikeType");
 
-            entity.HasIndex(e => e.SType, "UQ__tblBikeT__47012A917D5F1FE7").IsUnique();
+            entity.HasIndex(e => e.SType, "UQ__tblBikeT__47012A9151EFF243").IsUnique();
 
             entity.Property(e => e.SType)
                 .HasMaxLength(20)
@@ -208,7 +205,7 @@ public partial class NmcnpmContext : DbContext
 
         modelBuilder.Entity<TblPermission>(entity =>
         {
-            entity.HasKey(e => e.PkIdPermission).HasName("PK__tblPermi__DADB9652B62CC339");
+            entity.HasKey(e => e.PkIdPermission).HasName("PK__tblPermi__DADB96523ACC3141");
 
             entity.ToTable("tblPermission");
 
