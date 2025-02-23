@@ -38,7 +38,6 @@
                         <!-- Hiển thị thông tin người dùng và nút đăng xuất nếu đã đăng nhập -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="/path/to/avatar.jpg" alt="Avatar" class="rounded-circle" width="30" height="30">
                                 @if (Context.Session.GetString("Permissions") == "0")
                                 {
                                     @:Admin: @Context.Session.GetString("AccountName")
@@ -82,6 +81,5 @@
 
    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
