@@ -23,6 +23,7 @@ namespace NMCNPM_Nhom3.Controllers
         // GET: BikeManager
         public async Task<IActionResult> Index()
         {
+            TempData.Clear();
             var bikes = await _context.TblBikes.Include(b => b.FkIdBikeDetailNavigation).ToListAsync();
             return View(bikes);
         }
@@ -196,5 +197,24 @@ namespace NMCNPM_Nhom3.Controllers
         }
 
 
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var bike = await _context.TblBikes.FirstOrDefaultAsync(b => b.PkIdBike == id);
+                bike.SStatus = "Đã xóa";
+                _context.Update(bike);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Xóa xe đạp thành công!";
+            }
+            catch
+            {
+                TempData["ErrorMessage"] = "Lỗi khi xóa xe!";
+            }
+            var bikes = await _context.TblBikes.Include(b => b.FkIdBikeDetailNavigation).ToListAsync();
+            return View("Index",bikes);
+            
+
+        }
     }
 }
