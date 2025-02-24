@@ -32,16 +32,7 @@
                             <td>
 
 								@item.DDate.ToString("dd/MM/yyyy")
-                                @{
-                                    string role = item.FkIdPermission switch
-                                    {
-                                        0 => "Quản lý",
-                                        1 => "Nhân viên",
-                                        2 => "Khách hàng",
-                                        _ => "Không xác định"
-                                    };
-                                }
-                                @role
+                               
                             </td>
                             <td>
                                 <a asp-controller="Staff" asp-action="Edit" asp-route-id="@item.PkIdUser" class="btn btn-warning btn-sm">Sửa</a>

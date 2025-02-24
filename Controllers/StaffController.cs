@@ -77,48 +77,6 @@ namespace NMCNPM_Nhom3.Controllers
             if (!ModelState.IsValid)
             {
                 return View(account);
-
-                if (_context.TblAccounts.Find(account.PkIdUser) == null)
-                {
-                    return NotFound();
-                }
-
-                // Cập nhật thông tin tài khoản
-                _context.TblAccounts.Find(account.PkIdUser).SAccountName = account.SAccountName;
-                _context.TblAccounts.Find(account.PkIdUser).SPhoneNumber = account.SPhoneNumber;
-                _context.TblAccounts.Find(account.PkIdUser).DDate = account.DDate;
-                _context.TblAccounts.Find(account.PkIdUser).FkIdPermission = account.FkIdPermission;
-                _context.TblAccounts.Find(account.PkIdUser).SUserIdentification = account.SUserIdentification;
-
-                // Nếu có mật khẩu mới thì mã hóa và lưu, nếu không thì giữ nguyên mật khẩu cũ
-                if (!string.IsNullOrEmpty(account.SPassword))
-                {
-                    _context.TblAccounts.Find(account.PkIdUser).SPassword = BCrypt.Net.BCrypt.HashPassword(account.SPassword);
-                }
-
-                //var existingAccount = _context.TblAccounts.Find(account.PkIdUser);
-                //if (existingAccount == null)
-                //{
-                //    return NotFound();
-                //}
-
-                //// Cập nhật thông tin tài khoản
-                //existingAccount.SAccountName = account.SAccountName;
-                //existingAccount.SPhoneNumber = account.SPhoneNumber;
-                //existingAccount.DDate = account.DDate;
-                //existingAccount.FkIdPermission = account.FkIdPermission;
-                //existingAccount.SUserIdentification = account.SUserIdentification;
-
-                //// Nếu có mật khẩu mới thì mã hóa và lưu, nếu không thì giữ nguyên mật khẩu cũ
-                //if (!string.IsNullOrEmpty(account.SPassword))
-                //{
-                //    existingAccount.SPassword = BCrypt.Net.BCrypt.HashPassword(account.SPassword);
-                //}
-
-
-                //_context.SaveChanges();
-                //return RedirectToAction("Index");
-
             }
 
             var existingAccount = await _context.TblAccounts.FindAsync(id);
@@ -127,7 +85,7 @@ namespace NMCNPM_Nhom3.Controllers
                 return NotFound();
             }
 
-            // Kiểm tra trùng số điện thoại & CCCD (trừ chính nó)
+            
             bool isPhoneNumberExist = _context.TblAccounts.Any(a => a.SPhoneNumber == account.SPhoneNumber && a.PkIdUser != id);
             bool isCCCDExist = _context.TblAccounts.Any(a => a.SUserIdentification == account.SUserIdentification && a.PkIdUser != id);
 
@@ -142,18 +100,23 @@ namespace NMCNPM_Nhom3.Controllers
                 return View(account);
             }
 
-            // Cập nhật thông tin thủ công
+           
             existingAccount.SAccountName = account.SAccountName;
             existingAccount.SPhoneNumber = account.SPhoneNumber;
             existingAccount.DDate = account.DDate;
             existingAccount.FkIdPermission = account.FkIdPermission;
             existingAccount.SUserIdentification = account.SUserIdentification;
 
+
             try
             {
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Cập nhật tài khoản thành công!";
-                return RedirectToAction("Index");
+
+             
+                ViewBag.SuccessMessage = "Cập nhật tài khoản thành công!";
+                ViewBag.RedirectUrl = Url.Action("Index");
+
+                return View(account);
             }
             catch (Exception ex)
             {
@@ -161,6 +124,8 @@ namespace NMCNPM_Nhom3.Controllers
                 return View(account);
             }
         }
+
+
 
 
 
