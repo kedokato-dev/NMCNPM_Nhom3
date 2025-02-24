@@ -1,7 +1,15 @@
 ﻿@{
     ViewData["Title"] = "Home";
+    int pageSize = 20; // Số xe mỗi trang
+    int pageNumber = Context.Request.Query["page"].Count > 0 ? int.Parse(Context.Request.Query["page"]) : 1;
+    int totalBikes = _context.TblBikes.Count();
+    int totalPages = (int)Math.Ceiling((double)totalBikes / pageSize);
+
+    var pagedBikes = _context.TblBikes.OrderByDescending(b => b.SCondition == "Chưa thuê").Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
 }
 
+@inject NMCNPM_Nhom3.Models.Entities.NmcnpmContext _context
 <div>
     <div class="banner position-relative text-white text-start">
         <img src="~/assets/resources/banner.png" class="img-fluid w-100 rounded shadow" alt="Banner Image">
@@ -12,3 +20,103 @@
         </div>
     </div>
 </div>
+<div class="container mt-4">
+    <h2 class="text-center mb-4 fw-bold text-primary">
+        <i class="fa-solid fa-bicycle"></i> Thuê xe ngay
+    </h2>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var bike in pagedBikes)
+        {
+            <!-- Card i -->
+            <div class="col">
+                <div class="card shadow-lg rounded-4 border-0 h-100">
+                    <a asp-controller="Home" asp-action="Details" asp-route-id="@bike.PkIdBike" class="text-decoration-none text-dark">
+                        <img src="./assets/resources/bike.png" class="card-img-top rounded-top-4" alt="@bike.SName">
+                    </a>
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">@bike.SName</h5>
+
+                            <!-- Tình trạng xe -->
+                            <p class="card-text text-muted">
+                                Tình trạng:
+                                <strong class="@(bike.SStatus == "Mới" ? "text-success" : bike.SStatus == "Cũ" ? "text-warning" : "text-secondary")">
+                                    @bike.SStatus
+                                </strong>
+                            </p>
+
+                            <!-- Trạng thái xe -->
+                            <p class="card-text text-muted">
+                                Trạng thái:
+                                <strong class="@(bike.SCondition == "Đã thuê" ? "text-danger" : "text-primary")">
+                                    @(bike.SCondition == "Đã thuê" ? "Đã thuê" : "Chưa thuê")
+                                </strong>
+                            </p>
+
+                            <!-- Giá thuê -->
+                            <p class="card-text text-muted">
+                                Giá:
+                                <strong class="text-danger">@string.Format("{0:N0}", @bike.FRentalPrice) VNĐ/Giờ</strong>
+                            </p>
+
+                            <!-- Nút Đặt ngay, chỉ hiển thị nếu xe chưa thuê -->
+                            @if (bike.SCondition == "Chưa thuê")
+                            {
+                            <button class="btn btn-primary w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#maintenanceModal">🚴 Đặt ngay</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary w-100 rounded-pill" disabled>🚳 Đã thuê</button>
+                            }
+                        </div>
+                    
+                    
+                </div>
+                
+            </div>
+
+        }
+       
+    </div>
+    
+</div>>
+<!-- Thanh phân trang -->
+<nav aria-label="Page navigation" class="mt-4 d-flex justify-content-center">
+    <ul class="pagination pagination-lg">
+        <!-- Nút "Trước" -->
+        @if (pageNumber > 1)
+        {
+            <li class="page-item">
+                <a class="page-link rounded-pill shadow-sm" href="?page=@(pageNumber - 1)">« Trước</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link rounded-pill">« Trước</span>
+            </li>
+        }
+
+        <!-- Các số trang -->
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            <li class="page-item @(i == pageNumber ? "active" : "")">
+                <a class="page-link rounded-pill shadow-sm @(i == pageNumber ? "bg-primary text-white" : "")" href="?page=@i">@i</a>
+            </li>
+        }
+
+        <!-- Nút "Sau" -->
+        @if (pageNumber < totalPages)
+        {
+            <li class="page-item">
+                <a class="page-link rounded-pill shadow-sm" href="?page=@(pageNumber + 1)">Tiếp »</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link rounded-pill">Tiếp »</span>
+            </li>
+        }
+    </ul>
+</nav>

@@ -33,7 +33,7 @@ namespace NMCNPM_Nhom3.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            var user = _context.TblAccounts.Include(u => u.SPermissionsNavigation).FirstOrDefault(u => u.SPhoneNumber == username && u.SPassword == password);
+            var user = _context.TblAccounts.Include(u => u.FkIdPermissionNavigation).FirstOrDefault(u => u.SPhoneNumber == username && u.SPassword == password);
             if (user == null)
             {
                 ViewBag.Message = "Invalid login credentials.";
@@ -43,7 +43,7 @@ namespace NMCNPM_Nhom3.Controllers
             {
                 new Claim(ClaimTypes.Name, user.SAccountName),
                 new Claim("Phone", user.SPhoneNumber),
-                new Claim(ClaimTypes.Role,  user.SPermissionsNavigation?.SPermissionn??"ban")
+                new Claim(ClaimTypes.Role,  user.FkIdPermissionNavigation?.SPermissionn??"ban")
             };
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
@@ -56,7 +56,21 @@ namespace NMCNPM_Nhom3.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login");
+            return RedirectToAction("Index");
+        }
+        public async Task<IActionResult> Details(int id)
+        {
+            var bike = await _context.TblBikes
+        .Include(b => b.FkIdBikeDetailNavigation)
+            .ThenInclude(d => d.FkIdBikeTypeNavigation) // Load loại xe
+        .Include(b => b.FkIdBikeDetailNavigation)
+            .ThenInclude(d => d.FkIdBikeBrandNavigation) // Load hãng xe
+        .FirstOrDefaultAsync(b => b.PkIdBike == id);
+            if (bike == null || bike.FkIdBikeDetailNavigation == null)
+            {
+                return NotFound();
+            }
+            return  View(bike);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

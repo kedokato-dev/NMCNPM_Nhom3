@@ -1,0 +1,20 @@
+﻿@model NMCNPM_Nhom3.Models.Entities.TblBike
+
+@{
+    ViewData["Title"] = "Thêm xe mới";
+}
+
+<h2 class="fw-bold text-success">➕ Thêm Xe Mới</h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label>Tên xe</label>
+        <input asp-for="SName" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Giá thuê</label>
+        <input asp-for="FRentalPrice" type="number" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">✔ Thêm</button>
+    <a asp-action="Index" class="btn btn-outline-dark">⬅ Hủy</a>
+</form>

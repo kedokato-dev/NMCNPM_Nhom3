@@ -74,7 +74,30 @@ namespace NMCNPM_Nhom3.Controllers
         {
             if (!ModelState.IsValid)
             {
+
                 return View(account);
+                var existingAccount = _context.TblAccounts.Find(account.PkIdUser);
+                if (existingAccount == null)
+                {
+                    return NotFound();
+                }
+
+                // Cập nhật thông tin tài khoản
+                existingAccount.SAccountName = account.SAccountName;
+                existingAccount.SPhoneNumber = account.SPhoneNumber;
+                existingAccount.DDate = account.DDate;
+                existingAccount.FkIdPermission = account.FkIdPermission;
+                existingAccount.SUserIdentification = account.SUserIdentification;
+
+                // Nếu có mật khẩu mới thì mã hóa và lưu, nếu không thì giữ nguyên mật khẩu cũ
+                if (!string.IsNullOrEmpty(account.SPassword))
+                {
+                    existingAccount.SPassword = BCrypt.Net.BCrypt.HashPassword(account.SPassword);
+                }
+
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+
             }
 
             var existingAccount = await _context.TblAccounts.FindAsync(id);

@@ -58,7 +58,7 @@ public partial class NmcnpmContext : DbContext
             entity.Property(e => e.SPassword)
                 .HasMaxLength(10)
                 .HasColumnName("sPassword");
-            entity.Property(e => e.SPermissions).HasColumnName("sPermissions");
+            entity.Property(e => e.FkIdPermission).HasColumnName("FkIdPermission");
             entity.Property(e => e.SPhoneNumber)
                 .HasMaxLength(15)
                 .HasColumnName("sPhoneNumber");
@@ -66,8 +66,8 @@ public partial class NmcnpmContext : DbContext
                 .HasMaxLength(20)
                 .HasColumnName("sUserIdentification");
 
-            entity.HasOne(d => d.SPermissionsNavigation).WithMany(p => p.TblAccounts)
-                .HasForeignKey(d => d.SPermissions)
+            entity.HasOne(d => d.FkIdPermissionNavigation).WithMany(p => p.TblAccounts)
+                .HasForeignKey(d => d.FkIdPermission)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_tblAccount_tblPermission");
         });

@@ -1,0 +1,15 @@
+﻿@model NMCNPM_Nhom3.Models.Entities.TblBike
+
+@{
+    ViewData["Title"] = "Xóa xe";
+}
+
+<h2 class="fw-bold text-danger">🗑 Xóa Xe?</h2>
+
+<p><strong>Bạn có chắc chắn muốn xóa xe này?</strong></p>
+<p>Tên xe: @Model.SName</p>
+
+<form asp-action="DeleteConfirmed">
+    <button type="submit" class="btn btn-danger">❌ Xóa</button>
+    <a asp-action="Index" class="btn btn-outline-dark">⬅ Hủy</a>
+</form>
