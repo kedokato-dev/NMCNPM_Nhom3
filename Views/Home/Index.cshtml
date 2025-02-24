@@ -30,9 +30,10 @@
         {
             <!-- Card i -->
             <div class="col">
-                <div class="card shadow-lg rounded-4 border-0 h-100">
+                <div class="card shadow-lg rounded-4 border-0 h-120">
                     <a asp-controller="Home" asp-action="Details" asp-route-id="@bike.PkIdBike" class="text-decoration-none text-dark">
-                        <img src="./assets/resources/bike.png" class="card-img-top rounded-top-4" alt="@bike.SName">
+                        <img src="./assets/resources/@bike.SImage" class="card-img-top rounded-top-4 w-100" alt="@bike.SName">
+
                     </a>
                         <div class="card-body text-center">
                             <h5 class="card-title fw-bold">@bike.SName</h5>

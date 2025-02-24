@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using NMCNPM_Nhom3.Models.Entities;
 using BCrypt.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NMCNPM_Nhom3.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class StaffController : Controller
     {
         private readonly NmcnpmContext _context;
