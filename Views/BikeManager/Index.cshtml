@@ -37,8 +37,12 @@
                         <td>@string.Format("{0:N0}",@item.FRentalPrice) VNĐ</td>
                         <td class="d-flex justify-content-center gap-2">
                             <a asp-action="Details" asp-route-id="@item.PkIdBike" class="btn btn-info btn-sm">👁 Xem</a>
-                            <a asp-action="Edit" asp-route-id="@item.PkIdBike" class="btn btn-warning btn-sm">✏ Sửa</a>
-                            <a asp-action="Delete" asp-route-id="@item.PkIdBike" class="btn btn-danger btn-sm">🗑 Xóa</a>
+                            <a asp-action="EditBike" asp-route-id="@item.PkIdBike" class="btn btn-warning btn-sm">✏ Sửa</a>
+                            <a href="@Url.Action("Delete", "Bike", new { id = @item.PkIdBike })"
+                               onclick="return confirm('Bạn có chắc chắn muốn xóa không?')"
+                               class="btn btn-danger">
+                                🗑 Xóa
+                            </a>
                         </td>
                     </tr>
                 }

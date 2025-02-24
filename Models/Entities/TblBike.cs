@@ -21,7 +21,7 @@ public partial class TblBike
 
     public string? SImage { get; set; }
 
-    public virtual TblBikeDetail FkIdBikeDetailNavigation { get; set; } = null!;
+    public virtual TblBikeDetail? FkIdBikeDetailNavigation { get; set; }
 
     public virtual ICollection<TblBill> FkIdBills { get; set; } = new List<TblBill>();
 }

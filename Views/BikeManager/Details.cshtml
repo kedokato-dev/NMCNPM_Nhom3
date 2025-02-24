@@ -37,6 +37,22 @@
                     <span class="fw-bold text-danger fs-5">@string.Format("{0:N0}", Model.FDeposit) VNĐ</span>
                 </p>
                 <p>
+                    <strong class="text-success">🛵 Loại xe:</strong>
+                    <span class="fw-bold text-dark">@Model.FkIdBikeDetailNavigation.FkIdBikeTypeNavigation.SType</span>
+                </p>
+                <p>
+                    <strong class="text-warning">🏭 Hãng sản xuất:</strong>
+                    <span class="fw-bold text-dark">@Model.FkIdBikeDetailNavigation.FkIdBikeBrandNavigation.SName</span>
+                </p>
+                <p>
+                    <strong class="text-danger">📜 Chất liệu:</strong>
+                    <span class="fw-bold text-info">@Model.FkIdBikeDetailNavigation.SMaterial</span>
+                </p>
+                <p>
+                    <strong class="text-warning">🏭 Khối lượng:</strong>
+                    <span class="fw-bold text-dark">@Model.FkIdBikeDetailNavigation.FWeight Kg</span>
+                </p>
+                <p>
                     <strong class="text-dark">📜  Mô tả:</strong>
                     <span class="fw-bold text-danger fs-5">Chả biết tả cái gì nhưng mà cứ thêm vào cho đỡ trống. Nói chung xe này
                         xịn lắm anh em cứ thuê đi nhé!
@@ -49,36 +65,29 @@
         @if (Model.FkIdBikeDetailNavigation != null)
         {
             <hr>
-            <h4 class="fw-bold text-primary text-center">📖 Thông tin chi tiết</h4>
+            <h4 class="fw-bold text-primary text-center">📖 Thông tin chi tiết của Cửa Hàng</h4>
 
             <div class="row">
                 <div class="col-md-6">
                     <p>
-                        <strong class="text-success">🛵 Loại xe:</strong>
-                        <span class="fw-bold text-dark">@Model.FkIdBikeDetailNavigation.FkIdBikeTypeNavigation.SType</span>
+                        <strong class="text-black">📜 Tên cửa hàng:</strong>
+                        <span class="fw-bold text-info">Binary Bike</span>
                     </p>
                     <p>
-                        <strong class="text-warning">🏭 Hãng sản xuất:</strong>
-                        <span class="fw-bold text-dark">@Model.FkIdBikeDetailNavigation.FkIdBikeBrandNavigation.SName</span>
-                    </p>
-                    <p>
-                        <strong class="text-danger">📜 Chất liệu:</strong>
-                        <span class="fw-bold text-info">@Model.FkIdBikeDetailNavigation.SMaterial</span>
+                        <strong class="text-primary">⚙ Địa chỉ:</strong>
+                        <span class="fw-bold text-dark">Đố bạn biết</span>
                     </p>
                 </div>
 
                 <div class="col-md-6">
-                    <p>
-                        <strong class="text-warning">🏭 Khối lượng:</strong>
-                        <span class="fw-bold text-dark">@Model.FkIdBikeDetailNavigation.FWeight Kg</span>
-                    </p>
+                   
                     <p>
                         <strong class="text-danger">📜 Mô tả:</strong>
-                        <span class="fw-bold text-info">Xe này bất tử cân mọi hỏng hóc nhé mọi người</span>
+                        <span class="fw-bold text-info">Cửa hàng uy tín số 1 Hồ Tây</span>
                     </p>
                     <p>
-                        <strong class="text-primary">⚙ Đặc điểm kỹ thuật:</strong>
-                        <span class="fw-bold text-dark">Xe này có sức mạnh vô song đạp không biết mệt là gì</span>
+                        <strong class="text-primary">⚙ Thêm:</strong>
+                        <span class="fw-bold text-dark">Xe của cửa hàng có sức mạnh vô song, đạp không biết mệt là gì</span>
                     </p>
                 </div>
             </div>
