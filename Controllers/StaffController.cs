@@ -17,7 +17,7 @@ namespace NMCNPM_Nhom3.Controllers
         public IActionResult Index()
         {
             var staff = _context.TblAccounts
-                                .Where(a => a.SPermissions == 1 )
+                                .Where(a => a.FkIdPermission == 1 )
                                 .ToList();
             return View(staff);
         }
@@ -76,23 +76,22 @@ namespace NMCNPM_Nhom3.Controllers
             {
 
                 return View(account);
-                var existingAccount = _context.TblAccounts.Find(account.PkIdUser);
-                if (existingAccount == null)
+                if (_context.TblAccounts.Find(account.PkIdUser) == null)
                 {
                     return NotFound();
                 }
 
                 // Cập nhật thông tin tài khoản
-                existingAccount.SAccountName = account.SAccountName;
-                existingAccount.SPhoneNumber = account.SPhoneNumber;
-                existingAccount.DDate = account.DDate;
-                existingAccount.FkIdPermission = account.FkIdPermission;
-                existingAccount.SUserIdentification = account.SUserIdentification;
+                _context.TblAccounts.Find(account.PkIdUser).SAccountName = account.SAccountName;
+                _context.TblAccounts.Find(account.PkIdUser).SPhoneNumber = account.SPhoneNumber;
+                _context.TblAccounts.Find(account.PkIdUser).DDate = account.DDate;
+                _context.TblAccounts.Find(account.PkIdUser).FkIdPermission = account.FkIdPermission;
+                _context.TblAccounts.Find(account.PkIdUser).SUserIdentification = account.SUserIdentification;
 
                 // Nếu có mật khẩu mới thì mã hóa và lưu, nếu không thì giữ nguyên mật khẩu cũ
                 if (!string.IsNullOrEmpty(account.SPassword))
                 {
-                    existingAccount.SPassword = BCrypt.Net.BCrypt.HashPassword(account.SPassword);
+                    _context.TblAccounts.Find(account.PkIdUser).SPassword = BCrypt.Net.BCrypt.HashPassword(account.SPassword);
                 }
 
                 _context.SaveChanges();
@@ -125,7 +124,7 @@ namespace NMCNPM_Nhom3.Controllers
             existingAccount.SAccountName = account.SAccountName;
             existingAccount.SPhoneNumber = account.SPhoneNumber;
             existingAccount.DDate = account.DDate;
-            existingAccount.SPermissions = account.SPermissions;
+            existingAccount.FkIdPermission = account.FkIdPermission;
             existingAccount.SUserIdentification = account.SUserIdentification;
 
             try
