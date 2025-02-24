@@ -17,7 +17,7 @@ namespace NMCNPM_Nhom3.Controllers
         public IActionResult Index()
         {
             var staff = _context.TblAccounts
-                                .Where(a => a.SPermissions == 1 )
+                                .Where(a => a.FkIdPermission == 1 )
                                 .ToList();
             return View(staff);
         }
@@ -74,29 +74,28 @@ namespace NMCNPM_Nhom3.Controllers
         {
             if (!ModelState.IsValid)
             {
-
                 return View(account);
-                var existingAccount = _context.TblAccounts.Find(account.PkIdUser);
-                if (existingAccount == null)
-                {
-                    return NotFound();
-                }
+                //var existingAccount = _context.TblAccounts.Find(account.PkIdUser);
+                //if (existingAccount == null)
+                //{
+                //    return NotFound();
+                //}
 
-                // Cập nhật thông tin tài khoản
-                existingAccount.SAccountName = account.SAccountName;
-                existingAccount.SPhoneNumber = account.SPhoneNumber;
-                existingAccount.DDate = account.DDate;
-                existingAccount.FkIdPermission = account.FkIdPermission;
-                existingAccount.SUserIdentification = account.SUserIdentification;
+                //// Cập nhật thông tin tài khoản
+                //existingAccount.SAccountName = account.SAccountName;
+                //existingAccount.SPhoneNumber = account.SPhoneNumber;
+                //existingAccount.DDate = account.DDate;
+                //existingAccount.FkIdPermission = account.FkIdPermission;
+                //existingAccount.SUserIdentification = account.SUserIdentification;
 
-                // Nếu có mật khẩu mới thì mã hóa và lưu, nếu không thì giữ nguyên mật khẩu cũ
-                if (!string.IsNullOrEmpty(account.SPassword))
-                {
-                    existingAccount.SPassword = BCrypt.Net.BCrypt.HashPassword(account.SPassword);
-                }
+                //// Nếu có mật khẩu mới thì mã hóa và lưu, nếu không thì giữ nguyên mật khẩu cũ
+                //if (!string.IsNullOrEmpty(account.SPassword))
+                //{
+                //    existingAccount.SPassword = BCrypt.Net.BCrypt.HashPassword(account.SPassword);
+                //}
 
-                _context.SaveChanges();
-                return RedirectToAction("Index");
+                //_context.SaveChanges();
+                //return RedirectToAction("Index");
 
             }
 
@@ -125,7 +124,7 @@ namespace NMCNPM_Nhom3.Controllers
             existingAccount.SAccountName = account.SAccountName;
             existingAccount.SPhoneNumber = account.SPhoneNumber;
             existingAccount.DDate = account.DDate;
-            existingAccount.SPermissions = account.SPermissions;
+            existingAccount.FkIdPermission = account.FkIdPermission;
             existingAccount.SUserIdentification = account.SUserIdentification;
 
             try
