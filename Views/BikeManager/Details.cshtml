@@ -12,7 +12,7 @@
         <div class="row">
             <!-- Hình ảnh -->
             <div class="col-md-6 text-center">
-                <img src="~/assets/resources/bike.png" class="img-fluid rounded shadow" alt="@Model.SName">
+                <img src="~/assets/resources/@Model.SImage" class="img-fluid object-fit-cover rounded shadow" alt="@Model.SName">
             </div>
 
             <!-- Thông tin xe -->
@@ -31,6 +31,16 @@
                 <p>
                     <strong class="text-dark">💰 Giá thuê:</strong>
                     <span class="fw-bold text-danger fs-5">@string.Format("{0:N0}", Model.FRentalPrice) VNĐ/Giờ</span>
+                </p>
+                <p>
+                    <strong class="text-dark">💰 Tiền cọc:</strong>
+                    <span class="fw-bold text-danger fs-5">@string.Format("{0:N0}", Model.FDeposit) VNĐ</span>
+                </p>
+                <p>
+                    <strong class="text-dark">📜  Mô tả:</strong>
+                    <span class="fw-bold text-danger fs-5">Chả biết tả cái gì nhưng mà cứ thêm vào cho đỡ trống. Nói chung xe này
+                        xịn lắm anh em cứ thuê đi nhé!
+                    </span>
                 </p>
             </div>
         </div>
@@ -51,9 +61,17 @@
                         <strong class="text-warning">🏭 Hãng sản xuất:</strong>
                         <span class="fw-bold text-dark">@Model.FkIdBikeDetailNavigation.FkIdBikeBrandNavigation.SName</span>
                     </p>
+                    <p>
+                        <strong class="text-danger">📜 Chất liệu:</strong>
+                        <span class="fw-bold text-info">@Model.FkIdBikeDetailNavigation.SMaterial</span>
+                    </p>
                 </div>
 
                 <div class="col-md-6">
+                    <p>
+                        <strong class="text-warning">🏭 Khối lượng:</strong>
+                        <span class="fw-bold text-dark">@Model.FkIdBikeDetailNavigation.FWeight Kg</span>
+                    </p>
                     <p>
                         <strong class="text-danger">📜 Mô tả:</strong>
                         <span class="fw-bold text-info">Xe này bất tử cân mọi hỏng hóc nhé mọi người</span>

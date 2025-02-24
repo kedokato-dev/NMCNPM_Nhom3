@@ -1,0 +1,84 @@
+﻿@model NMCNPM_Nhom3.Models.Entities.TblBikeDetail
+
+@{
+    ViewData["Title"] = "Thêm Chi Tiết Xe Đạp";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">Thêm Chi Tiết Xe Đạp</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="CreateBikeDetail" method="post">
+                        <div class="mb-3">
+                            <label asp-for="SFrameSize" class="form-label fw-bold">Kích Thước Khung</label>
+                            <input asp-for="SFrameSize" class="form-control" placeholder="Nhập kích thước khung" />
+                            <span asp-validation-for="SFrameSize" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SMaterial" class="form-label fw-bold">Chất Liệu</label>
+                            <input asp-for="SMaterial" class="form-control" placeholder="Nhập chất liệu khung" />
+                            <span asp-validation-for="SMaterial" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FWeight" class="form-label fw-bold">Trọng Lượng (kg)</label>
+                            <input asp-for="FWeight" type="number" step="0.01" class="form-control" placeholder="Nhập trọng lượng" />
+                            <span asp-validation-for="FWeight" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FkIdBikeBrand" class="form-label fw-bold">Thương Hiệu</label>
+                            <select asp-for="FkIdBikeBrand" class="form-select" asp-items="ViewBag.FkIdBikeBrand">
+                                <option value="">-- Chọn thương hiệu --</option>
+                            </select>
+                            <span asp-validation-for="FkIdBikeBrand" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FkIdBikeType" class="form-label fw-bold">Loại Xe</label>
+                            <select asp-for="FkIdBikeType" class="form-select" asp-items="ViewBag.FkIdBikeType">
+                                <option value="">-- Chọn loại xe --</option>
+                            </select>
+                            <span asp-validation-for="FkIdBikeType" class="text-danger"></span>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success px-4 me-2">
+                                <i class="bi bi-save"></i> Lưu
+                            </button>
+                            <a asp-action="ViewListBikeDetail" class="btn btn-secondary px-4">
+                                <i class="bi bi-arrow-left"></i> Hủy
+                            </a>
+                        </div>
+                    </form>
+                </div>
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Thành công!</strong> @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Lỗi!</strong> @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

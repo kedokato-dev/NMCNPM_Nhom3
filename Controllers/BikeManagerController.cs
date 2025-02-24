@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NMCNPM_Nhom3.Models.Entities;
 using System;
@@ -24,7 +25,7 @@ namespace NMCNPM_Nhom3.Controllers
             var bikes = await _context.TblBikes.Include(b => b.FkIdBikeDetailNavigation).ToListAsync();
             return View(bikes);
         }
-
+        
         // GET: BikeManager/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -112,6 +113,61 @@ namespace NMCNPM_Nhom3.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        //=====================BikeDetail====================================================
+
+        public async Task<IActionResult> ViewListBikeDetail()
+        {
+            var bikeDetails = await _context.TblBikeDetails.Include(b => b.FkIdBikeBrandNavigation)
+                .Include(b => b.FkIdBikeTypeNavigation).ToListAsync();
+            return View(bikeDetails);
+        }
+
+        public IActionResult CreateBikeDetail()
+        {
+            TempData.Clear();
+            var brands = _context.TblBikeBrands.ToList();
+            var types = _context.TblBikeTypes.ToList();
+
+            // Kiểm tra nếu danh sách rỗng, tránh lỗi NullReferenceException
+            ViewBag.FkIdBikeBrand = brands.Any() ? new SelectList(brands, "PkIdBikeBrand", "SName") : new SelectList(new List<TblBikeBrand>());
+            ViewBag.FkIdBikeType = types.Any() ? new SelectList(types, "PkIdBikeType", "SType") : new SelectList(new List<TblBikeType>());
+
+            return View();
+        }
+
+
+        // POST: BikeDetail/Create
+        [HttpPost]
+        public async Task<IActionResult> CreateBikeDetail(TblBikeDetail bikeDetail)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Add(bikeDetail);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Thêm chi tiết xe đạp thành công!";
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = "Đã xảy ra lỗi khi thêm chi tiết xe đạp.";
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.\n" ;
+            }
+            var brands = _context.TblBikeBrands.ToList();
+            var types = _context.TblBikeTypes.ToList();
+
+            // Kiểm tra nếu danh sách rỗng, tránh lỗi NullReferenceException
+            ViewBag.FkIdBikeBrand = brands.Any() ? new SelectList(brands, "PkIdBikeBrand", "SName") : new SelectList(new List<TblBikeBrand>());
+            ViewBag.FkIdBikeType = types.Any() ? new SelectList(types, "PkIdBikeType", "SType") : new SelectList(new List<TblBikeType>());
+
+            return View(bikeDetail);
         }
     }
 }

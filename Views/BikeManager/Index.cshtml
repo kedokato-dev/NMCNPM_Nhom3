@@ -8,8 +8,12 @@
     <h2 class="fw-bold text-primary text-center">🚲 Quản lý Xe Đạp</h2>
 
     <div class="d-flex justify-content-between my-3">
+        <a asp-action="ViewListBikeDetail" class="btn btn-primary">
+            <i class="bi bi-card-list"></i> <!-- Icon danh sách -->
+            Danh sách mẫu xe
+        </a>
         <div></div> <!-- Giữ khoảng trống bên trái -->
-        <a asp-action="Create" class="btn btn-success">➕ Thêm xe mới</a>
+        <a asp-action="Create" class="btn btn-info"><i class="bi bi-patch-plus"></i> Thêm xe mới</a>
     </div>
 
     <div class="table-responsive">
