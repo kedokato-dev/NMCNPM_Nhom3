@@ -16,9 +16,9 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Tên đăng nhập</th>
+                        <th>SĐT</th>
                         <th>Họ và tên</th>
-                        <th>Quyền hạn</th>
+                        <th>Năm sinh</th>
                         <th>Thao tác</th>
                     </tr>
                 </thead>
@@ -30,6 +30,8 @@
                             <td>@item.SPhoneNumber</td>
                             <td>@item.SAccountName</td>
                             <td>
+
+								@item.DDate.ToString("dd/MM/yyyy")
                                 @{
                                     string role = item.FkIdPermission switch
                                     {

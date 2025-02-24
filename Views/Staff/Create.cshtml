@@ -2,31 +2,62 @@
 @{
 	ViewData["Title"] = "Thêm tài khoản";
 }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 <div class="container">
 	<div class="row">
-		<div class="col-12">
+		
 			<h3 class="text-center mb-4">Thêm tài khoản</h3>
 
-			@if (!ViewData.ModelState.IsValid)
-			{
-				<div class="alert alert-danger">
-					@foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-					{
-						<p>@modelError.ErrorMessage</p>
-					}
-				</div>
-			}
+        @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+        {
+            <script>
+                $(document).ready(function () {
+                    $("#successModal").modal("show");
+
+                    $("#closeModal").on("click", function () {
+                        window.location.href = "@ViewBag.RedirectUrl";
+                    });
+
+                    setTimeout(function () {
+                        window.location.href = "@ViewBag.RedirectUrl";
+                    }, 3000); // Tự động chuyển hướng sau 3 giây
+                });
+            </script>
+
+            <!-- Modal Bootstrap -->
+            <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="successModalLabel">Thông báo</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            @ViewBag.SuccessMessage
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="closeModal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+
 
 			<form asp-action="Create" method="post" id="addStaffForm">
 				<div class="mb-3">
 					<label asp-for="SAccountName" class="form-label">Họ và tên</label>
 					<input asp-for="SAccountName" class="form-control" required>
 				</div>
-				<div class="mb-3">
-					<label asp-for="SPhoneNumber" class="form-label">Số điện thoại</label>
-					<input asp-for="SPhoneNumber" class="form-control" required>
-				</div>
+            <div class="mb-3">
+                <label asp-for="SPhoneNumber" class="form-label">Số điện thoại</label>
+                <input asp-for="SPhoneNumber" id="SPhoneNumber" class="form-control" required>
+                <span id="SPhoneNumberError" class="text-danger"></span>
+            </div>
 				<div class="mb-3">
 					<label asp-for="DDate" class="form-label">Ngày sinh</label>
 					<input asp-for="DDate" type="date" class="form-control" required>
@@ -36,17 +67,25 @@
 					<select asp-for="FkIdPermission" class="form-select" required>
 						<option value="0">Quản lý</option>
 						<option value="1">Nhân viên</option>
-						<option value="2">Khách hàng</option>
 					</select>
 				</div>
-				<div class="mb-3">
-					<label asp-for="SUserIdentification" class="form-label">Số CCCD</label>
-					<input asp-for="SUserIdentification" class="form-control" required>
-				</div>
-				<div class="mb-3">
-					<label asp-for="SPassword" class="form-label">Mật khẩu</label>
-					<input asp-for="SPassword" type="password" class="form-control" required>
-				</div>
+            <div class="mb-3">
+                <label asp-for="SUserIdentification" class="form-label">Số CCCD</label>
+                <input asp-for="SUserIdentification" id="SUserIdentification" class="form-control" required>
+                <span id="SUserIdentificationError" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="SPassword" class="form-label">Mật khẩu</label>
+                <input asp-for="SPassword" id="SPassword" type="password" class="form-control" required>
+                <span id="SPasswordError" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Nhập lại mật khẩu</label>
+                <input type="password" id="ConfirmPassword" class="form-control" required>
+                <span id="ConfirmPasswordError" class="text-danger"></span>
+            </div>
 
 				<button type="submit" class="btn btn-primary" id="btn_add">Thêm</button>
 
@@ -55,45 +94,75 @@
 	</div>
 </div>
 
-<div class="modal fade" id="messageModal" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Thông báo</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body" id="modalMessage"></div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-			</div>
-		</div>
-	</div>
-</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            function validatePhoneNumber() {
+                let phoneNumber = $("#SPhoneNumber").val().trim();
+                let phoneRegex = /^(0\d{9,10})$/;
+                if (!phoneRegex.test(phoneNumber)) {
+                    $("#SPhoneNumberError").text("Số điện thoại phải có 10-11 chữ số và bắt đầu bằng số 0.");
+                } else {
+                    $("#SPhoneNumberError").text("");
+                }
+            }
+
+            function validateIDCard() {
+                let idCard = $("#SUserIdentification").val().trim();
+                let idCardRegex = /^\d{12}$/;
+                if (!idCardRegex.test(idCard)) {
+                    $("#SUserIdentificationError").text("CCCD phải có đúng 12 chữ số.");
+                } else {
+                    $("#SUserIdentificationError").text("");
+                }
+            }
+
+            function validatePassword() {
+                let password = $("#SPassword").val().trim();
+                let passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@@$!%*?&])[A-Za-z\d@@$!%*?&]{8,}$/;
+                if (!passwordRegex.test(password)) {
+                    $("#SPasswordError").text("Mật khẩu phải có ít nhất 8 ký tự, gồm 1 số, 1 chữ hoa và 1 ký tự đặc biệt.");
+                } else {
+                    $("#SPasswordError").text("");
+                }
+                validateConfirmPassword();
+            }
+
+            function validateConfirmPassword() {
+                let password = $("#SPassword").val().trim();
+                let confirmPassword = $("#ConfirmPassword").val().trim();
+                if (password !== confirmPassword) {
+                    $("#ConfirmPasswordError").text("Mật khẩu nhập lại không khớp.");
+                } else {
+                    $("#ConfirmPasswordError").text("");
+                }
+            }
+
+            // Gắn sự kiện kiểm tra ngay khi nhập liệu
+            $("#SPhoneNumber").on("input", validatePhoneNumber);
+            $("#SUserIdentification").on("input", validateIDCard);
+            $("#SPassword").on("input", validatePassword);
+            $("#ConfirmPassword").on("input", validateConfirmPassword);
+
+            // Kiểm tra lại toàn bộ khi nhấn Submit
+            $("#addStaffForm").on("submit", function (event) {
+                validatePhoneNumber();
+                validateIDCard();
+                validatePassword();
+                validateConfirmPassword();
+
+                // Nếu có lỗi nào chưa khắc phục, ngăn form gửi đi
+                if ($(".text-danger").text().trim() !== "") {
+                    event.preventDefault();
+                }
+            });
+        });
 
 
-<script>
+    </script>
+}
 
-	document.getElementById('btn_add').addEventListener('click', function () {
-		var formData = new FormData(document.getElementById('addStaffForm'));
-		fetch('/Staff/Create', {
-			method: 'POST',
-			body: formData
-		})
-		.then(response => response.json())
-		.then(data => {
-			document.getElementById('modalMessage').innerText = data.message;
-			var modal = new bootstrap.Modal(document.getElementById('messageModal'));
-			modal.show();
+}
 
-			if (data.redirectUrl) {
-				// Đóng modal sau 2 giây và chuyển hướng
-				setTimeout(function() {
-					modal.hide();
-					window.location.href = data.redirectUrl;
-				}, 2000);
-			}
-		});
-	});
-</script>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
