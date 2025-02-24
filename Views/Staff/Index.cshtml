@@ -36,12 +36,8 @@
                             </td>
                             <td>
                                 <a asp-controller="Staff" asp-action="Edit" asp-route-id="@item.PkIdUser" class="btn btn-warning btn-sm">Sửa</a>
-                                <button class="btn btn-danger btn-sm delete-btn"
-                                        data-id="@item.PkIdUser"
-                                        data-username="@item.SPhoneNumber"
-                                        data-fullname="@item.SAccountName">
-                                    Xóa
-                                </button>
+                                <a asp-controller="Staff" asp-action="Delete" asp-route-id="@item.PkIdUser" class="btn btn-danger btn-sm delete-btn">Xoá</a>
+
                             </td>
                         </tr>
                     }

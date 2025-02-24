@@ -58,7 +58,7 @@ namespace NMCNPM_Nhom3.Controllers
 
 
 
-
+        [HttpGet]
         public IActionResult Edit(int id)
         {
             var account = _context.TblAccounts.Find(id);
@@ -74,9 +74,10 @@ namespace NMCNPM_Nhom3.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, TblAccount account)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(account);
+                //return View(account);
+                return Content("Lỗi");
             }
 
             var existingAccount = await _context.TblAccounts.FindAsync(id);
@@ -127,22 +128,40 @@ namespace NMCNPM_Nhom3.Controllers
 
 
 
-
-
+        [HttpGet]
         public IActionResult Delete(int id)
         {
-            var account = _context.TblAccounts.Find(id);
+            var account = _context.TblAccounts.FirstOrDefault(a => a.PkIdUser == id);
             if (account == null)
             {
                 return NotFound();
             }
+
+            return View(account);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirm(int id)
+        {
+            var account = _context.TblAccounts.Find(id);
+            if (account == null)
+            {
+                ViewBag.ErrorMessage = "Tài khoản không tồn tại!";
+                return View("Delete"); 
+            }
+
             _context.TblAccounts.Remove(account);
             _context.SaveChanges();
 
-            // Thêm thông báo thành công vào TempData
-            TempData["SuccessMessage"] = "Tài khoản đã được xóa thành công!";
-            return RedirectToAction("Index");
+            ViewBag.SuccessMessage = "Xoá tài khoản thành công!";
+            ViewBag.RedirectUrl = Url.Action("Index");
+
+            return View("Delete", account);
+
         }
+
 
 
 

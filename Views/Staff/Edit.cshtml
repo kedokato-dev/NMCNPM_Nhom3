@@ -79,7 +79,7 @@
                     <input asp-for="SUserIdentification" id="SUserIdentification" class="form-control" required>
                     <span id="SUserIdentificationError" class="text-danger"></span>
                 </div>
-
+                <input type="hidden" asp-for="PkIdUser" />
                 <button type="submit" class="btn btn-primary">Cập nhật</button>
                 <a asp-action="Index" class="btn btn-secondary">Hủy</a>
             </form>

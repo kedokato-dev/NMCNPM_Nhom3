@@ -1,0 +1,88 @@
+﻿@model NMCNPM_Nhom3.Models.Entities.TblAccount
+@{
+    ViewData["Title"] = "Bạn có chắc chắn muốn xoá tài khoản";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<div class="container">
+    <div class="row">
+
+        <h3 class="text-center mb-4">Xoá tài khoản</h3>
+
+        @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+        {
+            <script>
+                $(document).ready(function () {
+                    $("#successModal").modal("show");
+
+                    $("#closeModal").on("click", function () {
+                        window.location.href = "@ViewBag.RedirectUrl";
+                    });
+
+                    setTimeout(function () {
+                        window.location.href = "@ViewBag.RedirectUrl";
+                    }, 3000); // Tự động chuyển hướng sau 3 giây
+                });
+            </script>
+
+            <!-- Modal Bootstrap -->
+            <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="successModalLabel">Thông báo</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            @ViewBag.SuccessMessage
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="closeModal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+
+
+        <form asp-action="DeleteConfirm" method="post" id="deleteForm">
+            <input type="hidden" name="id" value="@Model.PkIdUser" />
+
+            <div class="mb-3">
+                <label asp-for="SAccountName" class="form-label">Họ và tên</label>
+                <input asp-for="SAccountName" class="form-control" required disabled >
+            </div>
+            <div class="mb-3">
+                <label asp-for="SPhoneNumber" class="form-label">Số điện thoại</label>
+                <input asp-for="SPhoneNumber" id="SPhoneNumber" class="form-control" required disabled>
+                <span id="SPhoneNumberError" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="DDate" class="form-label">Ngày sinh</label>
+                <input asp-for="DDate" type="date" class="form-control" required disabled>
+            </div>
+            <div class="mb-3">
+                <label asp-for="FkIdPermission" class="form-label">Loại tài khoản</label>
+                <select asp-for="FkIdPermission" class="form-select" required disabled>
+                    <option value="0">Quản lý</option>
+                    <option value="1">Nhân viên</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label asp-for="SUserIdentification" class="form-label">Số CCCD</label>
+                <input asp-for="SUserIdentification" id="SUserIdentification" class="form-control" required disabled>
+                <span id="SUserIdentificationError" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="btn_delete">Xoá tài khoản</button>
+            <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+        </form>
+    </div>
+</div>
+
+
+
+
