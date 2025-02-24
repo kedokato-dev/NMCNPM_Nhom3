@@ -7,9 +7,11 @@
 
     var pagedBikes = _context.TblBikes.OrderByDescending(b => b.SCondition == "Chưa thuê").Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
+    
+    @inject NMCNPM_Nhom3.Models.Entities.NmcnpmContext _context
 }
 
-@inject NMCNPM_Nhom3.Models.Entities.NmcnpmContext _context
+>>>>>>> Stashed changes
 <div>
     <div class="banner position-relative text-white text-start">
         <img src="~/assets/resources/banner.png" class="img-fluid w-100 rounded shadow" alt="Banner Image">
@@ -19,6 +21,7 @@
             <a href="/About" class="btn btn-danger btn-lg">Tìm hiểu thêm</a>
         </div>
     </div>
+<<<<<<< Updated upstream
 </div>
 <div class="container mt-4">
     <h2 class="text-center mb-4 fw-bold text-primary">
@@ -30,9 +33,10 @@
         {
             <!-- Card i -->
             <div class="col">
-                <div class="card shadow-lg rounded-4 border-0 h-100">
+                <div class="card shadow-lg rounded-4 border-0 h-120">
                     <a asp-controller="Home" asp-action="Details" asp-route-id="@bike.PkIdBike" class="text-decoration-none text-dark">
-                        <img src="./assets/resources/bike.png" class="card-img-top rounded-top-4" alt="@bike.SName">
+                        <img src="./assets/resources/@bike.SImage" class="card-img-top rounded-top-4 w-100" alt="@bike.SName">
+
                     </a>
                         <div class="card-body text-center">
                             <h5 class="card-title fw-bold">@bike.SName</h5>
@@ -120,3 +124,6 @@
         }
     </ul>
 </nav>
+=======
+</div>
+>>>>>>> Stashed changes

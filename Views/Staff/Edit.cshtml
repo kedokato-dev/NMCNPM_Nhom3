@@ -65,6 +65,14 @@
                 </div>
 
                 <div class="mb-3">
+
+
+                    <label asp-for="FkIdPermission" class="form-label">Loại tài khoản</label>
+                    <select asp-for="FkIdPermission" class="form-select" required>
+                        <option value="0" selected="@(Model.FkIdPermission == 0)">Quản lý</option>
+                        <option value="1" selected="@(Model.FkIdPermission == 1)">Nhân viên</option>
+                    </select>>
+
                     <label asp-for="FkIdPermission" class="form-label">Loại tài khoản</label>
                     <select asp-for="FkIdPermission" class="form-select" required>
                         <option value="0" selected="@(Model.FkIdPermission == 0)">Quản lý</option>

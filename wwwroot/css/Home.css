@@ -5,7 +5,10 @@
 .banner-content p {
     font-size: 1rem; /* Tăng cỡ chữ của đoạn mô tả */
 }
+<<<<<<< Updated upstream
 .card-img-top {
     height: 200px; /* Chiều cao cố định */
     object-fit: cover; /* Cắt ảnh để vừa khung */
 }
+=======
+>>>>>>> Stashed changes
