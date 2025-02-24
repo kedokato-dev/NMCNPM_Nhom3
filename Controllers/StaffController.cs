@@ -154,7 +154,6 @@ namespace NMCNPM_Nhom3.Controllers
 
             _context.TblAccounts.Remove(account);
             _context.SaveChanges();
-
             ViewBag.SuccessMessage = "Xoá tài khoản thành công!";
             ViewBag.RedirectUrl = Url.Action("Index");
 
