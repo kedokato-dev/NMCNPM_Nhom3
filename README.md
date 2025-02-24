@@ -1,4 +1,15 @@
 # 🚴‍♂️ NMCNPM - Nhóm 3 🌐  
+![GitHub contributors](https://img.shields.io/github/contributors/kedokato-dev/NMCNPM_Nhom3)
+![GitHub commit count](https://img.shields.io/github/commit-activity/y/kedokato-dev/NMCNPM_Nhom3)
+![GitHub license](https://img.shields.io/github/license/kedokato-dev/NMCNPM_Nhom3)
+![GitHub code size](https://img.shields.io/github/languages/code-size/kedokato-dev/NMCNPM_Nhom3)
+
+
+
+
+
+
+
 
 ## 📌 Thành viên trong nhóm  
 
