@@ -16,9 +16,9 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Tên đăng nhập</th>
+                        <th>SĐT</th>
                         <th>Họ và tên</th>
-                        <th>Quyền hạn</th>
+                        <th>Năm sinh</th>
                         <th>Thao tác</th>
                     </tr>
                 </thead>
@@ -30,16 +30,7 @@
                             <td>@item.SPhoneNumber</td>
                             <td>@item.SAccountName</td>
                             <td>
-                                @{
-                                    string role = item.SPermissions switch
-                                    {
-                                        0 => "Quản lý",
-                                        1 => "Nhân viên",
-                                        2 => "Khách hàng",
-                                        _ => "Không xác định"
-                                    };
-                                }
-                                @role
+								@item.DDate.ToString("dd/MM/yyyy")
                             </td>
                             <td>
                                 <a asp-controller="Staff" asp-action="Edit" asp-route-id="@item.PkIdUser" class="btn btn-warning btn-sm">Sửa</a>
