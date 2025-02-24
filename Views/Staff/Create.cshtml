@@ -61,7 +61,10 @@
 				<div class="mb-3">
 					<label asp-for="DDate" class="form-label">Ngày sinh</label>
 					<input asp-for="DDate" type="date" class="form-control" required>
+                <span id="DDateError" class="text-danger"></span>
 				</div>
+         
+
 				<div class="mb-3">
 					<label asp-for="FkIdPermission" class="form-label">Loại tài khoản</label>
 					<select asp-for="FkIdPermission" class="form-select" required>
@@ -137,11 +140,29 @@
                 }
             }
 
+            function validateBirthDate() {
+            let birthDate = new Date($("#DDate").val());
+            let today = new Date();
+
+            // Xóa thời gian để so sánh chỉ lấy ngày
+            today.setHours(0, 0, 0, 0);
+            birthDate.setHours(0, 0, 0, 0);
+
+            if (birthDate > today) {
+                $("#DDate").addClass("is-invalid");
+                $("#DDateError").text("Ngày sinh không thể lớn hơn ngày hiện tại.");
+            } else {
+                $("#DDate").removeClass("is-invalid");
+                $("#DDateError").text("");
+            }
+        }
+
             // Gắn sự kiện kiểm tra ngay khi nhập liệu
             $("#SPhoneNumber").on("input", validatePhoneNumber);
             $("#SUserIdentification").on("input", validateIDCard);
             $("#SPassword").on("input", validatePassword);
             $("#ConfirmPassword").on("input", validateConfirmPassword);
+            $("#DDate").on("input", validateBirthDate);
 
             // Kiểm tra lại toàn bộ khi nhấn Submit
             $("#addStaffForm").on("submit", function (event) {
@@ -149,6 +170,7 @@
                 validateIDCard();
                 validatePassword();
                 validateConfirmPassword();
+				validateBirthDate();
 
                 // Nếu có lỗi nào chưa khắc phục, ngăn form gửi đi
                 if ($(".text-danger").text().trim() !== "") {

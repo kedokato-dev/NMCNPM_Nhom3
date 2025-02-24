@@ -62,7 +62,9 @@
                 <div class="mb-3">
                     <label asp-for="DDate" class="form-label">Ngày sinh</label>
                     <input asp-for="DDate" type="date" class="form-control" value="@Model.DDate.ToString("yyyy-MM-dd")" required>
+                    <span id="DDateError" class="text-danger"></span>
                 </div>
+              
 
                 <div class="mb-3">
 
@@ -110,12 +112,32 @@
                 }
             }
 
+            function validateBirthDate() {
+            let birthDate = new Date($("#DDate").val());
+            let today = new Date();
+
+            // Xóa thời gian để so sánh chỉ lấy ngày
+            today.setHours(0, 0, 0, 0);
+            birthDate.setHours(0, 0, 0, 0);
+
+            if (birthDate > today) {
+                $("#DDate").addClass("is-invalid");
+                $("#DDateError").text("Ngày sinh không thể lớn hơn ngày hiện tại.");
+            } else {
+                $("#DDate").removeClass("is-invalid");
+                $("#DDateError").text("");
+            }
+        }
+
             $("#SPhoneNumber").on("input", validatePhoneNumber);
             $("#SUserIdentification").on("input", validateIDCard);
+              $("#DDate").on("input", validateBirthDate);
+
 
             $("#editStaffForm").on("submit", function (event) {
                 validatePhoneNumber();
                 validateIDCard();
+                validateBirthDate();
 
                 if ($(".text-danger").text().trim() !== "") {
                     event.preventDefault();
