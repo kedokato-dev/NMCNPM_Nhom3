@@ -25,8 +25,8 @@
 
 <div align="center">  
   <img src="https://www.techmeet360.com/wp-content/uploads/2018/11/ASP.NET-Core-Logo.png" alt="ASP.NET Core" width="150"/>  
-  <img src="https://zhost.vn/wp-content/uploads/2024/05/huong-dan-cai-dat-sql-server-ubuntu-01.png" alt="SQL Server" width="150"/>  
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Logo_jQuery.svg/2560px-Logo_jQuery.svg.png" alt="jQuery" width="150"/>  
+  <img src="https://sqladvice.com/wp-content/uploads/2017/07/tong-quan-ve-sql-server.jpg" alt="SQL Server" width="130" height = ''/>  
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Logo_jQuery.svg/2560px-Logo_jQuery.svg.png" alt="jQuery"  width="150" />  
   <img src="https://logovectorseek.com/wp-content/uploads/2019/10/bootstrap-logo-vector.png" alt="Bootstrap" width="150"/>  
 </div>  
 
