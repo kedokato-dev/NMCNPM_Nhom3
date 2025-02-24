@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Home";
-    int pageSize = 20; // Số xe mỗi trang
+    int pageSize = 18; // Số xe mỗi trang
     int pageNumber = Context.Request.Query["page"].Count > 0 ? int.Parse(Context.Request.Query["page"]) : 1;
     int totalBikes = _context.TblBikes.Count();
     int totalPages = (int)Math.Ceiling((double)totalBikes / pageSize);
@@ -32,10 +32,15 @@
             <!-- Card i -->
             <div class="col">
                 <div class="card shadow-lg rounded-4 border-0 h-120">
-                    <a asp-controller="Home" asp-action="Details" asp-route-id="@bike.PkIdBike" class="text-decoration-none text-dark">
-                        <img src="./assets/resources/@bike.SImage" class="card-img-top rounded-top-4 w-100" alt="@bike.SName">
-
+                    <a asp-controller="Home" asp-action="Details" asp-route-id="@bike.PkIdBike" class="text-decoration-none text-dark d-block">
+                        <div class="ratio ratio-16x9">
+                            <img src="./assets/resources/@bike.SImage"
+                                 class="img-fluid object-fit-cover rounded-top-4"
+                                 alt="@bike.SName"
+                                 onerror="this.onerror=null; this.src='/assets/resources/images.jpg';">
+                        </div>
                     </a>
+
                         <div class="card-body text-center">
                             <h5 class="card-title fw-bold">@bike.SName</h5>
 

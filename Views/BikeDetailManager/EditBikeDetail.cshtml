@@ -1,0 +1,62 @@
+﻿@model NMCNPM_Nhom3.Models.Entities.TblBikeDetail
+
+@{
+    ViewData["Title"] = "Chỉnh sửa thông tin xe đạp";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center text-primary">✍️ Chỉnh sửa thông tin xe đạp</h2>
+    <hr>
+
+    <!-- Hiển thị thông báo thành công hoặc lỗi -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success text-center">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger text-center">@TempData["ErrorMessage"]</div>
+    }
+
+    <form asp-action="EditBikeDetail" method="post" class="shadow p-4 bg-light rounded">
+        <input type="hidden" asp-for="PkIdBikeDetail" />
+
+        <!-- Kích thước khung -->
+        <div class="mb-3">
+            <label asp-for="SFrameSize" class="form-label">📏 Kích thước khung</label>
+            <input asp-for="SFrameSize" class="form-control" placeholder="Nhập kích thước khung" required />
+        </div>
+
+        <!-- Chất liệu -->
+        <div class="mb-3">
+            <label asp-for="SMaterial" class="form-label">🛠 Chất liệu</label>
+            <input asp-for="SMaterial" class="form-control" placeholder="Nhập chất liệu" required />
+        </div>
+
+        <!-- Trọng lượng -->
+        <div class="mb-3">
+            <label asp-for="FWeight" class="form-label">⚖️ Trọng lượng (kg)</label>
+            <input asp-for="FWeight" type="number" class="form-control" placeholder="Nhập trọng lượng" required />
+        </div>
+
+        <!-- Hãng xe -->
+        <div class="mb-3">
+            <label class="form-label">🏭 Hãng xe</label>
+            <select asp-for="FkIdBikeBrand" asp-items="ViewBag.FkIdBikeBrand" class="form-select"></select>
+        </div>
+
+        <!-- Loại xe -->
+        <div class="mb-3">
+            <label class="form-label">🚲 Loại xe</label>
+            <select asp-for="FkIdBikeType" asp-items="ViewBag.FkIdBikeType" class="form-select"></select>
+        </div>
+
+        <hr>
+
+        <!-- Nút Lưu -->
+        <button type="submit" class="btn btn-primary w-100 rounded-pill">💾 Lưu thay đổi</button>
+
+        <!-- Nút Hủy -->
+        <a asp-action="Index" class="btn btn-outline-secondary w-100 mt-3 rounded-pill">⬅ Quay lại</a>
+    </form>
+</div>

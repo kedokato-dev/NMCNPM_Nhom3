@@ -1,0 +1,36 @@
+﻿@model NMCNPM_Nhom3.Models.Entities.TblBikeDetail
+
+@{
+    ViewData["Title"] = "Thông tin xe đạp";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center text-primary">🚲 Thông tin chi tiết xe đạp</h2>
+    <hr>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h4 class="card-title text-center text-success">@Model.FkIdBikeBrandNavigation.SName - @Model.FkIdBikeTypeNavigation.SType</h4>
+                    <hr>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>📏 Kích thước khung:</strong> @Model.SFrameSize</li>
+                        <li class="list-group-item"><strong>🛠 Chất liệu:</strong> @Model.SMaterial</li>
+                        <li class="list-group-item"><strong>⚖️ Trọng lượng:</strong> @Model.FWeight kg</li>
+                        <li class="list-group-item"><strong>🏭 Hãng xe:</strong> @Model.FkIdBikeBrandNavigation.SName</li>
+                        <li class="list-group-item"><strong>🚲 Loại xe:</strong> @Model.FkIdBikeTypeNavigation.SType</li>
+                    </ul>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="EditBikeDetail" asp-route-id="@Model.PkIdBikeDetail" class="btn btn-warning rounded-pill">✏ Chỉnh sửa</a>
+                        <a asp-action="ViewListBikeDetail" class="btn btn-outline-secondary rounded-pill">⬅ Quay lại</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

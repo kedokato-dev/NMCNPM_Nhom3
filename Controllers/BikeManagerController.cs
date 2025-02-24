@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NMCNPM_Nhom3.Models.Entities;
 using System;
@@ -24,7 +25,7 @@ namespace NMCNPM_Nhom3.Controllers
             var bikes = await _context.TblBikes.Include(b => b.FkIdBikeDetailNavigation).ToListAsync();
             return View(bikes);
         }
-
+        
         // GET: BikeManager/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -113,5 +114,8 @@ namespace NMCNPM_Nhom3.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+
+        
     }
 }
