@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Home";
+<<<<<<< Updated upstream
     int pageSize = 20; // Số xe mỗi trang
     int pageNumber = Context.Request.Query["page"].Count > 0 ? int.Parse(Context.Request.Query["page"]) : 1;
     int totalBikes = _context.TblBikes.Count();
@@ -10,6 +11,10 @@
 }
 
 @inject NMCNPM_Nhom3.Models.Entities.NmcnpmContext _context
+=======
+}
+
+>>>>>>> Stashed changes
 <div>
     <div class="banner position-relative text-white text-start">
         <img src="~/assets/resources/banner.png" class="img-fluid w-100 rounded shadow" alt="Banner Image">
@@ -19,6 +24,7 @@
             <a href="/About" class="btn btn-danger btn-lg">Tìm hiểu thêm</a>
         </div>
     </div>
+<<<<<<< Updated upstream
 </div>
 <div class="container mt-4">
     <h2 class="text-center mb-4 fw-bold text-primary">
@@ -121,3 +127,6 @@
         }
     </ul>
 </nav>
+=======
+</div>
+>>>>>>> Stashed changes
