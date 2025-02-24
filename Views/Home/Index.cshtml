@@ -5,7 +5,7 @@
     int totalBikes = _context.TblBikes.Count();
     int totalPages = (int)Math.Ceiling((double)totalBikes / pageSize);
 
-    var pagedBikes = _context.TblBikes.OrderByDescending(b => b.SCondition == "Chưa thuê").Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+    var pagedBikes = _context.TblBikes.Where(p => p.SStatus != "Đã xóa").OrderByDescending(b => b.SCondition == "Chưa thuê").Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
     
     @inject NMCNPM_Nhom3.Models.Entities.NmcnpmContext _context

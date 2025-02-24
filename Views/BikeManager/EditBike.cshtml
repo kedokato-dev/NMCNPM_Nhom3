@@ -1,11 +1,11 @@
 ﻿@model NMCNPM_Nhom3.Models.Entities.TblBike
 
 @{
-    ViewData["Title"] = "Thêm mới xe đạp";
+    ViewData["Title"] = "Chỉnh sửa xe đạp";
 }
 
 <div class="container mt-4">
-    <h2 class="text-success text-center">➕ Thêm mới xe đạp</h2>
+    <h2 class="text-primary text-center">✏️ Chỉnh sửa thông tin xe đạp</h2>
     <hr>
     @if (TempData["SuccessMessage"] != null)
     {
@@ -22,23 +22,24 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
-
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-body">
-                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <form asp-action="EditBike" method="post">
+                        <input type="hidden" asp-for="PkIdBike" />
+
                         <!-- Tên xe -->
                         <div class="mb-3">
                             <label asp-for="SName" class="form-label fw-bold">🚴 Tên xe</label>
-                            <input asp-for="SName" class="form-control" placeholder="Nhập tên xe" required />
+                            <input asp-for="SName" class="form-control" placeholder="Nhập tên xe" />
                         </div>
 
                         <!-- Chi tiết xe -->
                         <div class="mb-3">
                             <label class="form-label fw-bold">📋 Chi tiết xe</label>
                             <div class="input-group">
-                                <input type="text" id="selectedBikeDetail" class="form-control" readonly>
+                                <input type="text" id="selectedBikeDetail" class="form-control" value="@ViewBag.Detail" readonly>
                                 <input type="hidden" asp-for="FkIdBikeDetail" id="FkIdBikeDetail">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bikeDetailModal">
                                     🏷 Chọn chi tiết xe
@@ -49,40 +50,37 @@
                         <!-- Tình trạng -->
                         <div class="mb-3">
                             <label asp-for="SCondition" class="form-label fw-bold">🔍 Tình trạng</label>
-                            <input asp-for="SCondition" class="form-control" placeholder="Nhập tình trạng xe" required />
+                            <input asp-for="SCondition" class="form-control" placeholder="Nhập tình trạng xe" />
                         </div>
 
                         <!-- Trạng thái -->
                         <div class="mb-3">
                             <label asp-for="SStatus" class="form-label fw-bold">📌 Trạng thái</label>
-                            <input asp-for="SStatus" class="form-control" placeholder="Nhập trạng thái xe" required />
+                            <input asp-for="SStatus" class="form-control" placeholder="Nhập trạng thái xe" />
                         </div>
 
                         <!-- Giá thuê -->
                         <div class="mb-3">
                             <label asp-for="FRentalPrice" class="form-label fw-bold">💰 Giá thuê (VNĐ/h)</label>
-                            <input asp-for="FRentalPrice" type="number" step="0.1" class="form-control" placeholder="Nhập giá thuê" required />
+                            <input asp-for="FRentalPrice" type="number" step="0.1" class="form-control" placeholder="Nhập giá thuê" />
                         </div>
 
                         <!-- Tiền đặt cọc -->
                         <div class="mb-3">
                             <label asp-for="FDeposit" class="form-label fw-bold">💵 Tiền đặt cọc (VNĐ)</label>
-                            <input asp-for="FDeposit" type="number" step="0.1" class="form-control" placeholder="Nhập số tiền đặt cọc" required />
+                            <input asp-for="FDeposit" type="number" step="0.1" class="form-control" placeholder="Nhập số tiền đặt cọc" />
                         </div>
-
-                        <input asp-for="SImage" class="form-control" type ="hidden" value="hihi" />
 
                         <!-- Hình ảnh -->
                         <div class="mb-3">
-                            <label for="ImageFile" class="form-label fw-bold">📷 Hình ảnh</label>
-                            <input type="file" class="form-control" id="ImageFile" name="ImageFile" accept="image/*" />
+                            <label asp-for="SImage" class="form-label fw-bold">📷 Hình ảnh</label>
+                            <input asp-for="SImage" class="form-control" placeholder="Nhập đường dẫn hình ảnh" />
                         </div>
-
-
+                        
                         <hr>
 
-                        <!-- Nút Thêm mới -->
-                        <button type="submit" class="btn btn-success w-100 rounded-pill">✅ Thêm xe đạp</button>
+                        <!-- Nút Lưu -->
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill">💾 Lưu thay đổi</button>
 
                         <!-- Nút Quay lại -->
                         <a asp-action="Index" class="btn btn-outline-secondary w-100 mt-2 rounded-pill">⬅ Quay lại</a>
@@ -92,7 +90,6 @@
         </div>
     </div>
 
-    @* Modal chọn chi tiết xe *@
     <div class="modal fade" id="bikeDetailModal" tabindex="-1" aria-labelledby="bikeDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -104,13 +101,13 @@
                     <table class="table table-hover">
                         <thead class="table-dark text-center">
                             <tr>
-                                <th>📌 ID</th>
-                                <th>🏭 Hãng</th>
-                                <th>🚲 Loại</th>
-                                <th>📏 Kích thước khung</th>
-                                <th>🔩 Chất liệu</th>
-                                <th>⚖ Trọng lượng (kg)</th>
-                                <th>✅ Chọn</th>
+                                <th style="width: 8%;">📌 ID</th>
+                                <th style="width: 15%;">🏭 Hãng</th>
+                                <th style="width: 15%;">🚲 Loại</th>
+                                <th style="width: 20%;">📏 Kích thước khung</th>
+                                <th style="width: 15%;">🔩 Chất liệu</th>
+                                <th style="width: 15%;">⚖ Trọng lượng (kg)</th>
+                                <th style="width: 12%;">✅ Chọn</th>
                             </tr>
                         </thead>
                         <tbody id="bikeDetailTable">
@@ -121,12 +118,12 @@
             </div>
         </div>
     </div>
-</div>
 
+</div>
 <script>
     $(document).ready(function () {
         $.ajax({
-            url: "@Url.Action("GetBikeDetails", "BikeManager")",
+            url: "@Url.Action("GetBikeDetails","BikeManager")", // Thay bằng API thật
             method: "GET",
             dataType: "json",
             success: function (data) {
@@ -153,36 +150,52 @@
                     let type = parts[1];
 
                     rows += `
-                                <tr>
-                                    <td>${item.pkIdBikeDetail}</td>
-                                    <td>${brand}</td>
-                                    <td>${type}</td>
-                                    <td>${frameSize}</td>
-                                    <td>${material}</td>
-                                    <td>${weight}</td>
-                                    <td>
-                                        <button class="btn btn-success btn-sm" onclick="selectBikeDetail(${item.pkIdBikeDetail})">
-                                            ✔ Chọn
-                                        </button>
-                                    </td>
-                                </tr>
-                            `;
+                            <tr>
+                                <td>${item.pkIdBikeDetail}</td>
+                                <td>${brand}</td>
+                                <td>${type}</td>
+                                <td>${frameSize}</td>
+                                <td>${material}</td>
+                                <td>${weight}</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" onclick="selectBikeDetail(${item.pkIdBikeDetail})">
+                                        ✔ Chọn
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
                 });
 
                 $('#bikeDetailTable').html(rows);
+            },
+            error: function (error) {
+                console.error("🚨 Lỗi khi lấy dữ liệu xe đạp!", error);
             }
         });
     });
 
+    // Hàm chọn xe đạp
     function selectBikeDetail(bikeId) {
-        let row = $("#bikeDetailTable tr").filter(function () {
-            return $(this).find("td:first").text().trim() == bikeId;
+        let row = $(`#bikeDetailTable tr`).filter(function () {
+            return $(this).find('td:first').text().trim() == bikeId;
         });
+
         if (row.length) {
-            let selectedText = `${row.find("td:nth-child(2)").text()} - ${row.find("td:nth-child(3)").text()} - ${row.find("td:nth-child(4)").text()} - ${row.find("td:nth-child(5)").text()} - ${row.find("td:nth-child(6)").text()}kg`;
+            let brand = row.find("td:nth-child(2)").text().trim();
+            let type = row.find("td:nth-child(3)").text().trim();
+            let frameSize = row.find("td:nth-child(4)").text().trim();
+            let material = row.find("td:nth-child(5)").text().trim();
+            let weight = row.find("td:nth-child(6)").text().trim();
+
+            let selectedText = `${brand} - ${type} - ${frameSize} - ${material} - ${weight}kg`;
+
             $("#selectedBikeDetail").val(selectedText);
             $("#FkIdBikeDetail").val(bikeId);
+
             $("#bikeDetailModal").modal("hide");
+        } else {
+            console.error("❌ Không tìm thấy chi tiết xe đạp với ID:", bikeId);
         }
     }
 </script>
+
