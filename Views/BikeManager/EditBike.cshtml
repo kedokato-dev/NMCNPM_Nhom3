@@ -31,56 +31,56 @@
 
                         <!-- Tên xe -->
                         <div class="mb-3">
-                            <label asp-for="SName" class="form-label fw-bold">🚴 Tên xe</label>
+                            <label asp-for="SName" class="form-label fw-bold">Tên xe</label>
                             <input asp-for="SName" class="form-control" placeholder="Nhập tên xe" />
                         </div>
 
                         <!-- Chi tiết xe -->
                         <div class="mb-3">
-                            <label class="form-label fw-bold">📋 Chi tiết xe</label>
+                            <label class="form-label fw-bold">Chi tiết xe</label>
                             <div class="input-group">
                                 <input type="text" id="selectedBikeDetail" class="form-control" value="@ViewBag.Detail" readonly>
                                 <input type="hidden" asp-for="FkIdBikeDetail" id="FkIdBikeDetail">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bikeDetailModal">
-                                    🏷 Chọn chi tiết xe
+                                    Chọn chi tiết xe
                                 </button>
                             </div>
                         </div>
 
                         <!-- Tình trạng -->
                         <div class="mb-3">
-                            <label asp-for="SCondition" class="form-label fw-bold">🔍 Tình trạng</label>
+                            <label asp-for="SCondition" class="form-label fw-bold">Tình trạng</label>
                             <input asp-for="SCondition" class="form-control" placeholder="Nhập tình trạng xe" />
                         </div>
 
                         <!-- Trạng thái -->
                         <div class="mb-3">
-                            <label asp-for="SStatus" class="form-label fw-bold">📌 Trạng thái</label>
+                            <label asp-for="SStatus" class="form-label fw-bold">Trạng thái</label>
                             <input asp-for="SStatus" class="form-control" placeholder="Nhập trạng thái xe" />
                         </div>
 
                         <!-- Giá thuê -->
                         <div class="mb-3">
-                            <label asp-for="FRentalPrice" class="form-label fw-bold">💰 Giá thuê (VNĐ/h)</label>
+                            <label asp-for="FRentalPrice" class="form-label fw-bold">Giá thuê (VNĐ/h)</label>
                             <input asp-for="FRentalPrice" type="number" step="0.1" class="form-control" placeholder="Nhập giá thuê" />
                         </div>
 
                         <!-- Tiền đặt cọc -->
                         <div class="mb-3">
-                            <label asp-for="FDeposit" class="form-label fw-bold">💵 Tiền đặt cọc (VNĐ)</label>
+                            <label asp-for="FDeposit" class="form-label fw-bold">Tiền đặt cọc (VNĐ)</label>
                             <input asp-for="FDeposit" type="number" step="0.1" class="form-control" placeholder="Nhập số tiền đặt cọc" />
                         </div>
 
                         <!-- Hình ảnh -->
                         <div class="mb-3">
-                            <label asp-for="SImage" class="form-label fw-bold">📷 Hình ảnh</label>
+                            <label asp-for="SImage" class="form-label fw-bold">Hình ảnh</label>
                             <input asp-for="SImage" class="form-control" placeholder="Nhập đường dẫn hình ảnh" />
                         </div>
                         
                         <hr>
 
                         <!-- Nút Lưu -->
-                        <button type="submit" class="btn btn-primary w-100 rounded-pill">💾 Lưu thay đổi</button>
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill">Lưu thay đổi</button>
 
                         <!-- Nút Quay lại -->
                         <a asp-action="Index" class="btn btn-outline-secondary w-100 mt-2 rounded-pill">⬅ Quay lại</a>
@@ -101,13 +101,13 @@
                     <table class="table table-hover">
                         <thead class="table-dark text-center">
                             <tr>
-                                <th style="width: 8%;">📌 ID</th>
-                                <th style="width: 15%;">🏭 Hãng</th>
-                                <th style="width: 15%;">🚲 Loại</th>
-                                <th style="width: 20%;">📏 Kích thước khung</th>
-                                <th style="width: 15%;">🔩 Chất liệu</th>
-                                <th style="width: 15%;">⚖ Trọng lượng (kg)</th>
-                                <th style="width: 12%;">✅ Chọn</th>
+                                <th style="width: 8%;">ID</th>
+                                <th style="width: 15%;">Hãng</th>
+                                <th style="width: 15%;">Loại</th>
+                                <th style="width: 20%;">Kích thước khung</th>
+                                <th style="width: 15%;">Chất liệu</th>
+                                <th style="width: 15%;">Trọng lượng (kg)</th>
+                                <th style="width: 12%;">Chọn</th>
                             </tr>
                         </thead>
                         <tbody id="bikeDetailTable">

@@ -20,12 +20,12 @@
 
             <p class="mb-2">
                 <strong>Tình trạng:</strong>
-                <span class="fw-bold @(Model.SStatus == "Mới" ? "text-success" : "text-warning")">@Model.SStatus</span>
+                <span>@Model.SStatus</span>
             </p>
 
             <p class="mb-2">
                 <strong>Trạng thái:</strong>
-                <span class="fw-bold @(Model.SCondition == "Đã thuê" ? "text-danger" : "text-primary")">
+                <span >
                     @(Model.SCondition == "Đã thuê" ? "Đã thuê" : "Chưa thuê")
                 </span>
             </p>
@@ -40,28 +40,28 @@
             <!-- Thông tin chi tiết -->
             @if (Model.FkIdBikeDetailNavigation != null)
             {
-                <h4 class="fw-bold text-primary">🚲 Thông tin chi tiết</h4>
+                <h4 class="fw-bold text-primary">Thông tin chi tiết</h4>
 
                 <div class="card border-0 shadow-sm p-3">
                     <p class="mb-2">
-                        <strong class="text-success">🛵 Loại xe:</strong>
+                        <strong>Loại xe:</strong>
                         <span class="fw-bold text-dark">@Model.FkIdBikeDetailNavigation.FkIdBikeTypeNavigation.SType</span>
                     </p>
 
                     <p class="mb-2">
-                        <strong class="text-warning">🏭 Hãng sản xuất:</strong>
+                        <strong >Hãng sản xuất:</strong>
                         <span class="fw-bold text-dark">@Model.FkIdBikeDetailNavigation.FkIdBikeBrandNavigation.SName</span>
                     </p>
 
                     <p class="mb-2">
-                        <strong class="text-danger">📜 Mô tả:</strong>
-                        <span class="fw-bold text-info">Xe này cực xịn nhé AE 😎🔥</span>
+                        <strong >Mô tả:</strong>
+                        <span>Xe này cực xịn nhé AE </span>
                     </p>
                 </div>
             }
             else
             {
-                <p class="text-muted fst-italic">⚠ Không có thông tin chi tiết cho xe này.</p>
+                <p class="text-muted fst-italic">Không có thông tin chi tiết cho xe này.</p>
             }
 
             <hr>
@@ -74,31 +74,31 @@
                 }
                 else
                 {
-                    <button class="btn btn-secondary btn-lg rounded-pill" disabled>🚳 Đã thuê</button>
+                    <button class="btn btn-secondary btn-lg rounded-pill" disabled>Đã thuê</button>
                 }
 
-                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-dark btn-lg rounded-pill">⬅ Quay lại</a>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-dark btn-lg rounded-pill">Quay lại</a>
             </div>
         </div>
     </div>
 
     <!-- Thông tin cửa hàng -->
     <div class="mt-5 p-4 bg-light border rounded shadow-sm">
-        <h4 class="fw-bold text-dark">🏪 Về cửa hàng chúng tôi</h4>
+        <h4 class="fw-bold text-dark">Về cửa hàng chúng tôi</h4>
         <p class="text-muted">
             Chào mừng bạn đến với <strong class="text-primary">Binary Bike</strong> – địa điểm cho thuê xe hàng đầu! 🚴‍♂️
-            Chúng tôi cung cấp những mẫu xe <span class="fw-bold text-success">chất lượng cao</span> với giá cả hợp lý,
+            Chúng tôi cung cấp những mẫu xe <span class="fw-bold text-danger">chất lượng cao</span> với giá cả hợp lý,
             giúp bạn có những chuyến đi tuyệt vời trên mọi nẻo đường.
         </p>
 
-        <h5 class="fw-bold text-dark">🔥 Vì sao chọn chúng tôi?</h5>
+        <h5 class="fw-bold text-dark">Vì sao chọn chúng tôi?</h5>
         <ul class="list-unstyled">
-            <li>✅ <span class="text-success">Xe đời mới, động cơ mạnh mẽ (Động cơ Căng Hải)</span></li>
-            <li>✅ <span class="text-warning">Dịch vụ hỗ trợ 24/7</span></li>
-            <li>✅ <span class="text-primary">Giá cả hợp lý, không lo chặt chém</span></li>
-            <li>✅ <span class="text-danger">Bảo trì thường xuyên, đảm bảo an toàn</span></li>
+            <li><span class="text-primary">Xe đời mới, động cơ mạnh mẽ (Động cơ Căng Hải)</span></li>
+            <li><span class="text-primary">Dịch vụ hỗ trợ 24/7</span></li>
+            <li><span class="text-primary">Giá cả hợp lý, không lo chặt chém</span></li>
+            <li><span class="text-primary">Bảo trì thường xuyên, đảm bảo an toàn</span></li>
         </ul>
 
-        <p class="fw-bold text-info">🚀 Đến ngay cửa hàng để trải nghiệm dịch vụ chất lượng!</p>
+        <p class="fw-bold ">Đến ngay cửa hàng để trải nghiệm dịch vụ chất lượng!</p>
     </div>
 </div>
