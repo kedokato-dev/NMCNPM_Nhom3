@@ -38,8 +38,12 @@
                         <td>@item.SMaterial</td>
                         <td>@item.FWeight</td>
                         <td class="d-flex justify-content-center gap-2">
-                            <a asp-action="ViewBikeDetail" asp-route-id="@item.PkIdBikeDetail" class="btn btn-info btn-sm">👁 Xem</a>
-                            <a asp-action="EditBikeDetail" asp-route-id="@item.PkIdBikeDetail" class="btn btn-warning btn-sm">✏ Sửa</a>
+                            <a class="btn btn-primary" href="@Url.Action("ViewBikeDetail", "BikeDetailManager", new { id = @item.PkIdBikeDetail })">
+                                <i class="bi bi-info-circle-fill"></i>
+                            </a>
+                            <a class="btn btn-warning" href="@Url.Action("ViewBikeDetail", "EditBikeDetail", new { id = @item.PkIdBikeDetail })">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
                         </td>
                     </tr>
                 }
