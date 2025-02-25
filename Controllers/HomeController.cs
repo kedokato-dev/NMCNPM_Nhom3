@@ -33,25 +33,33 @@ namespace NMCNPM_Nhom3.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            var user = _context.TblAccounts.Include(u => u.FkIdPermissionNavigation).FirstOrDefault(u => u.SPhoneNumber == username && u.SPassword == password);
-            if (user == null)
+            var user = await _context.TblAccounts
+                .Include(u => u.FkIdPermissionNavigation)
+                .FirstOrDefaultAsync(u => u.SPhoneNumber == username);
+
+            // Kiểm tra tài khoản có tồn tại không
+            if (user == null || !isCorrectPassword(password, user.SPassword))
             {
-                ViewBag.Message = "Invalid login credentials.";
                 return Json(new { success = false, message = "Tên đăng nhập hoặc mật khẩu không đúng!" });
             }
+
+            // Tạo danh sách claim
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.SAccountName),
-                new Claim("Phone", user.SPhoneNumber),
-                new Claim(ClaimTypes.Role,  user.FkIdPermissionNavigation?.SPermissionn??"ban")
-            };
+    {
+        new Claim(ClaimTypes.Name, user.SAccountName),
+        new Claim("Phone", user.SPhoneNumber),
+        new Claim(ClaimTypes.Role, user.FkIdPermissionNavigation?.SPermissionn ?? "ban")
+    };
+
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
+            // Đăng nhập với cookie authentication
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             return Json(new { success = true });
         }
+
 
         public async Task<IActionResult> Logout()
         {
@@ -77,6 +85,11 @@ namespace NMCNPM_Nhom3.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private bool isCorrectPassword(string password, string hash)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hash);
         }
     }
 }
