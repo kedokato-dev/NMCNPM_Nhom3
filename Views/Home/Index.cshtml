@@ -1,4 +1,4 @@
-﻿                                     @{
+﻿@{
     ViewData["Title"] = "Home";
     int pageSize = 18; // Số xe mỗi trang
     int pageNumber = Context.Request.Query["page"].Count > 0 ? int.Parse(Context.Request.Query["page"]) : 1;
@@ -73,7 +73,7 @@
                             }
                             else
                             {
-                                <button class="btn btn-secondary w-100 rounded-pill" disabled>🚳 Đã thuê</button>
+                                <button class="btn btn-secondary w-100 rounded-pill" disabled>Đã thuê</button>
                             }
                         </div>
                     

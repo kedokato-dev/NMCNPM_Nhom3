@@ -17,43 +17,43 @@
 
             <!-- Thông tin xe -->
             <div class="col-md-6">
-                <p><strong class="text-dark">📌 Tên xe:</strong> <span class="fw-bold">@Model.SName</span></p>
+                <p><strong class="text-dark">Tên xe:</strong> <span class="fw-bold">@Model.SName</span></p>
                 <p>
-                    <strong class="text-dark">📍 Tình trạng:</strong>
+                    <strong class="text-dark">Tình trạng:</strong>
                     <span class="fw-bold @(Model.SStatus == "Mới" ? "text-success" : "text-warning")">@Model.SStatus</span>
                 </p>
                 <p>
-                    <strong class="text-dark">🔄 Trạng thái:</strong>
+                    <strong class="text-dark">Trạng thái:</strong>
                     <span class="fw-bold @(Model.SCondition == "Đã thuê" ? "text-danger" : "text-primary")">
                         @(Model.SCondition == "Đã thuê" ? "Đã thuê" : "Chưa thuê")
                     </span>
                 </p>
                 <p>
-                    <strong class="text-dark">💰 Giá thuê:</strong>
+                    <strong class="text-dark">Giá thuê:</strong>
                     <span class="fw-bold text-danger fs-5">@string.Format("{0:N0}", Model.FRentalPrice) VNĐ/Giờ</span>
                 </p>
                 <p>
-                    <strong class="text-dark">💰 Tiền cọc:</strong>
+                    <strong class="text-dark">Tiền cọc:</strong>
                     <span class="fw-bold text-danger fs-5">@string.Format("{0:N0}", Model.FDeposit) VNĐ</span>
                 </p>
                 <p>
-                    <strong class="text-success">🛵 Loại xe:</strong>
+                    <strong class="text-success">Loại xe:</strong>
                     <span class="fw-bold text-dark">@Model.FkIdBikeDetailNavigation.FkIdBikeTypeNavigation.SType</span>
                 </p>
                 <p>
-                    <strong class="text-warning">🏭 Hãng sản xuất:</strong>
+                    <strong class="text-dark">Hãng sản xuất:</strong>
                     <span class="fw-bold text-dark">@Model.FkIdBikeDetailNavigation.FkIdBikeBrandNavigation.SName</span>
                 </p>
                 <p>
-                    <strong class="text-danger">📜 Chất liệu:</strong>
+                    <strong class="text-dark">Chất liệu:</strong>
                     <span class="fw-bold text-info">@Model.FkIdBikeDetailNavigation.SMaterial</span>
                 </p>
                 <p>
-                    <strong class="text-warning">🏭 Khối lượng:</strong>
+                    <strong class="text-dark">Khối lượng:</strong>
                     <span class="fw-bold text-dark">@Model.FkIdBikeDetailNavigation.FWeight Kg</span>
                 </p>
                 <p>
-                    <strong class="text-dark">📜  Mô tả:</strong>
+                    <strong class="text-dark"> Mô tả:</strong>
                     <span class="fw-bold text-danger fs-5">Chả biết tả cái gì nhưng mà cứ thêm vào cho đỡ trống. Nói chung xe này
                         xịn lắm anh em cứ thuê đi nhé!
                     </span>
@@ -65,36 +65,36 @@
         @if (Model.FkIdBikeDetailNavigation != null)
         {
             <hr>
-            <h4 class="fw-bold text-primary text-center">📖 Thông tin chi tiết của Cửa Hàng</h4>
+            <h4 class="fw-bold text-primary text-center">Thông tin chi tiết của Cửa Hàng</h4>
 
             <div class="row">
                 <div class="col-md-6">
                     <p>
-                        <strong class="text-black">📜 Tên cửa hàng:</strong>
-                        <span class="fw-bold text-info">Binary Bike</span>
+                        <strong class="text-black">Tên cửa hàng:</strong>
+                        <span class="text-black">Binary Bike</span>
                     </p>
                     <p>
-                        <strong class="text-primary">⚙ Địa chỉ:</strong>
-                        <span class="fw-bold text-dark">Đố bạn biết</span>
+                        <strong class="text-black">Địa chỉ:</strong>
+                        <span class="text-black">Đố bạn biết</span>
                     </p>
                 </div>
 
                 <div class="col-md-6">
                    
                     <p>
-                        <strong class="text-danger">📜 Mô tả:</strong>
-                        <span class="fw-bold text-info">Cửa hàng uy tín số 1 Hồ Tây</span>
+                        <strong class="text-black">Mô tả:</strong>
+                        <span class="text-black">Cửa hàng uy tín số 1 Hồ Tây</span>
                     </p>
                     <p>
-                        <strong class="text-primary">⚙ Thêm:</strong>
-                        <span class="fw-bold text-dark">Xe của cửa hàng có sức mạnh vô song, đạp không biết mệt là gì</span>
+                        <strong class="text-black">Thêm:</strong>
+                        <span class="text-black">Xe của cửa hàng có sức mạnh vô song, đạp không biết mệt là gì</span>
                     </p>
                 </div>
             </div>
         }
         else
         {
-            <p class="text-muted fst-italic text-center">⚠ Không có thông tin chi tiết cho xe này.</p>
+            <p class="text-muted fst-italic text-center">Không có thông tin chi tiết cho xe này.</p>
         }
 
         <hr>
