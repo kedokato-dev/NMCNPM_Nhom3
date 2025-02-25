@@ -6,11 +6,6 @@
 
 
 
-
-
-
-
-
 ## 📌 Thành viên trong nhóm  
 
 ### 👨‍💻 Team Dev  
@@ -34,12 +29,16 @@
 
 ## 🛠️ Công nghệ sử dụng  
 
-<div align="center">  
-  <img src="https://www.techmeet360.com/wp-content/uploads/2018/11/ASP.NET-Core-Logo.png" alt="ASP.NET Core" width="150"/>  
-  <img src="https://sqladvice.com/wp-content/uploads/2017/07/tong-quan-ve-sql-server.jpg" alt="SQL Server" width="130" height = ''/>  
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Logo_jQuery.svg/2560px-Logo_jQuery.svg.png" alt="jQuery"  width="150" />  
-  <img src="https://logovectorseek.com/wp-content/uploads/2019/10/bootstrap-logo-vector.png" alt="Bootstrap" width="150"/>  
-</div>  
+
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-512BD4?style=flat&logo=dotnet&logoColor=white)
+![SQL Server](https://img.shields.io/badge/SQL%20Server-CC2927?style=flat&logo=microsoft-sql-server&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=flat&logo=bootstrap&logoColor=white)
+![jQuery](https://img.shields.io/badge/jQuery-0769AD?style=flat&logo=jquery&logoColor=white)
+
 
 ---
 
@@ -47,7 +46,7 @@
 
 ## ⬇️ 1. Clone repo:
    ```sh
-    git clone https://github.com/your-repo/NMCNPM_Nhom3.git
+    git clone https://github.com/kedekato-dev/NMCNPM_Nhom3. git
     cd NMCNPM_Nhom3
 ```
 
@@ -77,7 +76,7 @@
 
     Một số máy thì Name_Host có thể là: **Data Source = .**
 
-## ⛏️ 4. Cài đặt thư viện Entity Framework (EF) trong ASP.NET Core**
+## ⛏️ 4. Cài đặt thư viện Entity Framework (EF) trong ASP.NET Core
 
 **Cài đặt qua Nucget Package Console**
 ```sh
