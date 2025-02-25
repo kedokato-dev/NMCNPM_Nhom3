@@ -8,45 +8,50 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <h3 class="text-center mb-4">Danh sách tài khoản</h3>
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>SĐT</th>
-                        <th>Họ và tên</th>
-                        <th>Năm sinh</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@item.PkIdUser</td>
-                            <td>@item.SPhoneNumber</td>
-                            <td>@item.SAccountName</td>
-                            <td>
 
-								@item.DDate.ToString("dd/MM/yyyy")
-                               
-                            </td>
-                            <td>
-                                <a asp-controller="Staff" asp-action="Edit" asp-route-id="@item.PkIdUser" class="btn btn-warning btn-sm">Sửa</a>
-                                <a asp-controller="Staff" asp-action="Delete" asp-route-id="@item.PkIdUser" class="btn btn-danger btn-sm delete-btn">Xoá</a>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="text-center mb-4">Quản lý nhân viên</h3>
+                    <button class="btn btn-primary mb-3" onclick="location.href='@Url.Action("Create", "Staff")'">
+                        <i class="fas fa-user-plus"></i> Thêm nhân viên
+                    </button>
 
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <button class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Staff")'">Thêm nhân viên</button>
+                    <table class="table table-bordered table-hover text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>SĐT</th>
+                                <th>Họ và tên</th>
+                                <th>Năm sinh</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.PkIdUser</td>
+                                    <td>@item.SPhoneNumber</td>
+                                    <td>@item.SAccountName</td>
+                                    <td>@item.DDate.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <a asp-controller="Staff" asp-action="Edit" asp-route-id="@item.PkIdUser" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-edit"></i> Sửa
+                                        </a>
+                                        <a asp-controller="Staff" asp-action="Delete" asp-route-id="@item.PkIdUser" class="btn btn-danger btn-sm delete-btn">
+                                            <i class="fas fa-trash-alt"></i> Xóa
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+
+
 
 <!-- Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

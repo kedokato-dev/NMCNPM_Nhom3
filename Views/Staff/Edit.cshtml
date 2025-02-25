@@ -82,8 +82,14 @@
                     <span id="SUserIdentificationError" class="text-danger"></span>
                 </div>
                 <input type="hidden" asp-for="PkIdUser" />
-                <button type="submit" class="btn btn-primary">Cập nhật</button>
-                <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Cập nhật
+                </button>
+
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Hủy
+                </a>
             </form>
         </div>
     </div>
