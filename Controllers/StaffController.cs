@@ -151,9 +151,10 @@ namespace NMCNPM_Nhom3.Controllers
                 ViewBag.ErrorMessage = "Tài khoản không tồn tại!";
                 return View("Delete"); 
             }
-
-            _context.TblAccounts.Remove(account);
+            account.FkIdPermission = 3;
+            _context.TblAccounts.Update(account);
             _context.SaveChanges();
+
             ViewBag.SuccessMessage = "Xoá tài khoản thành công!";
             ViewBag.RedirectUrl = Url.Action("Index");
 
