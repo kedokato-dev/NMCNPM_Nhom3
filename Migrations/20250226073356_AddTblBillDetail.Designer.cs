@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NMCNPM_Nhom3.Models.Entities;
 
@@ -11,9 +12,11 @@ using NMCNPM_Nhom3.Models.Entities;
 namespace NMCNPM_Nhom3.Migrations
 {
     [DbContext(typeof(NmcnpmContext))]
-    partial class NmcnpmContextModelSnapshot : ModelSnapshot
+    [Migration("20250226073356_AddTblBillDetail")]
+    partial class AddTblBillDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

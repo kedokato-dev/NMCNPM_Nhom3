@@ -26,6 +26,8 @@ public partial class NmcnpmContext : DbContext
     public virtual DbSet<TblBikeType> TblBikeTypes { get; set; }
 
     public virtual DbSet<TblBill> TblBills { get; set; }
+    
+    public virtual DbSet<TblBillDetail> TblBillDetail { get; set; }
 
     public virtual DbSet<TblCreateBill> TblCreateBills { get; set; }
 
@@ -184,6 +186,21 @@ public partial class NmcnpmContext : DbContext
                         j.HasKey("FkIdBill", "FkIdBike").HasName("PK__tblBillD__D21248C9B5F86271");
                         j.ToTable("tblBillDetail");
                     });
+        });
+        
+        modelBuilder.Entity<TblBillDetail>(entity =>
+        {
+            entity.HasKey(e => new { e.FkIdBill, e.FkIdBike });
+
+            entity.HasOne(d => d.FkIdBillNavigation)
+                .WithMany(p => p.TblBillDetail)
+                .HasForeignKey(d => d.FkIdBill)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.FkIdBikeNavigation)
+                .WithMany(p => p.TblBillDetail)
+                .HasForeignKey(d => d.FkIdBike)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<TblCreateBill>(entity =>

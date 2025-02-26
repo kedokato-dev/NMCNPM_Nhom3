@@ -1,0 +1,86 @@
+@model NMCNPM_Nhom3.Models.Entities.TblBill
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Hóa Đơn";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary text-center">Chỉnh sửa Hóa Đơn</h2>
+    <hr>
+
+    <!-- Hiển thị thông báo thành công hoặc lỗi -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Thành công!</strong> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Lỗi!</strong> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        <!-- Mã hóa đơn (bôi xám và không thể chỉnh sửa) -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mã hóa đơn</label>
+                            <input type="text" class="form-control disabled-field" value="@Model.PkBillCode" readonly />
+                        </div>
+
+                        <!-- Thời gian bắt đầu (bôi xám và không thể chỉnh sửa) -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Thời gian bắt đầu</label>
+                            <input type="text" class="form-control disabled-field" value="@Model.DBeginTime.ToString("dd/MM/yyyy")" readonly />
+                        </div>
+
+                        <!-- Thời gian kết thúc (bôi xám và không thể chỉnh sửa) -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Thời gian kết thúc</label>
+                            <input type="text" class="form-control disabled-field" value="@Model.DEndTime.ToString("dd/MM/yyyy")" readonly />
+                        </div>
+
+                        <!-- Chi phí phát sinh -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Phí phát sinh</label>
+                            <input type="text" class="form-control" name="FIncidentalCosts" value="@Model.FIncidentalCosts" />
+                        </div>
+
+                        <!-- Mã xe (bôi xám và không thể chỉnh sửa) -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mã xe</label>
+                            <input type="text" class="form-control disabled-field" value="@ViewBag.BikeCode" readonly />
+                        </div>
+
+                        <!-- Tình trạng xe -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tình trạng xe</label>
+                            <input type="text" class="form-control" name="bikeCondition" value="@ViewBag.BikeCondition" />
+                        </div>
+
+                        <hr>
+
+                        <!-- Nút Cập nhật -->
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill">Cập nhật Hóa Đơn</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Bôi màu xám các trường không nhập được */
+    .disabled-field {
+        background-color: #f0f0f0; /* Màu xám nhạt */
+        color: #777; /* Màu chữ xám */
+    }
+</style>
