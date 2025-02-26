@@ -1,10 +1,4 @@
-﻿.banner-content h1 {
-    font-size: 4rem; /* Tăng cỡ chữ lên gấp 3 */
-}
-
-.banner-content p {
-    font-size: 1rem; /* Tăng cỡ chữ của đoạn mô tả */
-}
+﻿
 .card-img-top {
     height: 200px; /* Chiều cao cố định */
     object-fit: cover; /* Cắt ảnh để vừa khung */
