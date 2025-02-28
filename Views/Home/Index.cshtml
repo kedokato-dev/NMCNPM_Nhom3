@@ -1,4 +1,4 @@
-﻿                                     @{
+﻿@{
     ViewData["Title"] = "Home";
     int pageSize = 18; // Số xe mỗi trang
     int pageNumber = Context.Request.Query["page"].Count > 0 ? int.Parse(Context.Request.Query["page"]) : 1;
@@ -11,16 +11,17 @@
     @inject NMCNPM_Nhom3.Models.Entities.NmcnpmContext _context
 }
 
-<div>
-    <div class="banner position-relative text-white text-start">
+<div class="container-fluid">
+    <div class="banner position-relative text-white text-center text-md-start">
         <img src="~/assets/resources/banner.png" class="img-fluid w-100 rounded shadow" alt="Banner Image">
-        <div class="banner-content position-absolute top-50 start-25 translate-middle-y w-25 ps-5 ms-5">
+        <div class="banner-content position-absolute top-50 start-50 translate-middle w-75 w-md-50 px-4 px-md-5">
             <h1 class="fw-bold title-banner">Cho thuê xe đạp lượn lờ tại Hồ Tây</h1>
-            <p class="lead fs-2">Dịch vụ cho thuê xe đạp uy tín nhất tại Hồ Tây, mại dô, mại dô</p>
-            <a href="/" class="btn btn-danger btn-lg"  data-bs-toggle="modal" data-bs-target="#maintenanceModal">Tìm hiểu thêm</a>
+            <p class="lead fs-4 fs-md-2">Dịch vụ cho thuê xe đạp uy tín nhất tại Hồ Tây, mại dô, mại dô</p>
+            <a href="/" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#maintenanceModal">Tìm hiểu thêm</a>
         </div>
     </div>
 </div>
+
 <div class="container mt-4">
     <h2 class="text-center mb-4 fw-bold text-primary">
         <i class="fa-solid fa-bicycle"></i> Thuê xe ngay
@@ -73,7 +74,7 @@
                             }
                             else
                             {
-                                <button class="btn btn-secondary w-100 rounded-pill" disabled>🚳 Đã thuê</button>
+                                <button class="btn btn-secondary w-100 rounded-pill" disabled>Đã thuê</button>
                             }
                         </div>
                     

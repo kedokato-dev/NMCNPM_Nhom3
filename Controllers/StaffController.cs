@@ -47,6 +47,8 @@ namespace NMCNPM_Nhom3.Controllers
                 return View(account);
             }
 
+            account.SPassword = BCrypt.Net.BCrypt.HashPassword(account.SPassword); // Mã hóa mật khẩu
+
             _context.TblAccounts.Add(account); // Thêm tài khoản vào DB
             _context.SaveChanges(); // Lưu thay đổi
 
