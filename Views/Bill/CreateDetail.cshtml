@@ -1,0 +1,95 @@
+﻿@model NMCNPM_Nhom3.Models.Entities.TblBill
+
+@{
+    ViewData["Title"] = "Chi Tiết Hóa Đơn";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary text-center">Chi Tiết Hóa Đơn</h2>
+    <hr>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form id="billDetailForm" method="post" action="@Url.Action("Create", "Bill")">
+                        <!-- Hidden fields to pass customer data -->
+                        <input type="hidden" name="customerIdCard" value="@ViewBag.CustomerIdCard" />
+                        <input type="hidden" name="customerName" value="@ViewBag.CustomerName" />
+                        <input type="hidden" name="customerPhone" value="@ViewBag.CustomerPhone" />
+
+                        <!-- Thời gian bắt đầu -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Thời gian bắt đầu</label>
+                            <input type="datetime-local" class="form-control" id="startTime" name="DBeginTime" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required />
+                        </div>
+
+                        <!-- Thời gian kết thúc -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Thời gian kết thúc</label>
+                            <input type="datetime-local" class="form-control" id="endTime" name="DEndTime" />
+                        </div>
+
+                        <!-- Trạng thái thuê -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Trạng thái thuê</label>
+                            <select class="form-control" name="IStatus">
+                                <option value="1">Đang thuê</option>
+                                <option value="0">Trống</option>
+                            </select>
+                        </div>
+
+                        <!-- Nhân viên tạo -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nhân viên tạo</label>
+                            <input type="text" class="form-control" id="staffName" name="staffName" value="@User.Identity.Name" readonly style="background-color: #f0f0f0;" />
+                        </div>
+
+                        <!-- Phí phát sinh -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Phí phát sinh</label>
+                            <input type="number" class="form-control" name="FIncidentalCosts" step="0.1" />
+                        </div>
+
+                        <!-- Mã xe -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nhập mã xe</label>
+                            <input type="number" class="form-control" id="bikeCode" name="bikeCode" />
+                        </div>
+
+                        <!-- Nút tạo hóa đơn -->
+                        <button type="submit" class="btn btn-primary w-100 mt-3 rounded-pill">Tạo Hóa Đơn</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Tự động tính thời gian kết thúc khi trang load
+        var startTime = new Date($('#startTime').val());
+        startTime.setHours(startTime.getHours() + 3);
+        $('#endTime').val(startTime.toISOString().slice(0, 16));
+
+        // Kiểm tra và đảm bảo thời gian kết thúc lớn hơn thời gian bắt đầu ít nhất 3 giờ
+        $('#startTime').on('change', function () {
+            var startTime = new Date($(this).val());
+            var endTime = new Date($('#endTime').val());
+            if (endTime <= startTime) {
+                startTime.setHours(startTime.getHours() + 3);
+                $('#endTime').val(startTime.toISOString().slice(0, 16));
+            }
+        });
+
+        $('#endTime').on('change', function () {
+            var startTime = new Date($('#startTime').val());
+            var endTime = new Date($(this).val());
+            if (endTime <= startTime) {
+                startTime.setHours(startTime.getHours() + 3);
+                $('#endTime').val(startTime.toISOString().slice(0, 16));
+            }
+        });
+    });
+</script>

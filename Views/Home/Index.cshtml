@@ -35,7 +35,7 @@
                 <div class="card shadow-lg rounded-4 border-0 h-120">
                     <a asp-controller="Home" asp-action="Details" asp-route-id="@bike.PkIdBike" class="text-decoration-none text-dark d-block">
                         <div class="ratio ratio-16x9">
-                            <img src="./assets/resources/@bike.SImage"
+                            <img src="~/assets/resources/@bike.SImage"
                                  class="img-fluid object-fit-cover rounded-top-4"
                                  alt="@bike.SName"
                                  onerror="this.onerror=null; this.src='/assets/resources/images.jpg';">
@@ -128,5 +128,5 @@
         }
     </ul>
 </nav>
-</div>
+
 

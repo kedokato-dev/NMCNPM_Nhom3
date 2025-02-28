@@ -40,7 +40,15 @@
 						<!-- Hiển thị menu quản trị viên nếu là quản trị viên -->
 						<li class="nav-item"><a class="nav-link" href="/Staff">Quản lý nhân viên</a></li>
 						<li class="nav-item"><a class="nav-link" href="/BikeManager">Quản lý xe</a></li>
-					}else{
+					}
+                    else if (role == "Staff")
+                    {
+                        <!-- Hiển thị menu cho staff nếu là nhân viên -->
+                        <li class="nav-item"><a class="nav-link" href="/Staff">Quản lý nhân viên</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/BikeManager">Quản lý xe</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Bill")">Quản lý hoá đơn</a></li>
+                    }
+                    else{
                         <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>
                         <li class="nav-item"><a class="nav-link" href="/" data-bs-toggle="modal" data-bs-target="#maintenanceModal">Bảng giá</a></li>
                         <li class="nav-item"><a class="nav-link" href="/" data-bs-toggle="modal" data-bs-target="#maintenanceModal">Liên hệ</a></li>

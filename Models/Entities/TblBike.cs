@@ -24,4 +24,6 @@ public partial class TblBike
     public virtual TblBikeDetail? FkIdBikeDetailNavigation { get; set; }
 
     public virtual ICollection<TblBill> FkIdBills { get; set; } = new List<TblBill>();
+    
+    public virtual ICollection<TblBillDetail> TblBillDetail { get; set; } = new List<TblBillDetail>();
 }
