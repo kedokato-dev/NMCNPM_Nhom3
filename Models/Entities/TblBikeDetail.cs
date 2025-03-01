@@ -17,9 +17,9 @@ public partial class TblBikeDetail
 
     public int FkIdBikeType { get; set; }
 
-    public virtual TblBikeBrand? FkIdBikeBrandNavigation { get; set; } 
+    public virtual TblBikeBrand FkIdBikeBrandNavigation { get; set; } = null!;
 
-    public virtual TblBikeType? FkIdBikeTypeNavigation { get; set; }
+    public virtual TblBikeType FkIdBikeTypeNavigation { get; set; } = null!;
 
     public virtual ICollection<TblBike> TblBikes { get; set; } = new List<TblBike>();
 }

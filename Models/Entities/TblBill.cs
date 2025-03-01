@@ -15,7 +15,7 @@ public partial class TblBill
 
     public int? IStatus { get; set; }
 
-    public virtual ICollection<TblBike> FkIdBikes { get; set; } = new List<TblBike>();
-    
-    public virtual ICollection<TblBillDetail> TblBillDetail { get; set; } = new List<TblBillDetail>();
+    public virtual ICollection<TblBillDetail> TblBillDetails { get; set; } = new List<TblBillDetail>();
+
+    public virtual ICollection<TblCreateBill> TblCreateBills { get; set; } = new List<TblCreateBill>();
 }

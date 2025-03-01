@@ -26,25 +26,17 @@ public partial class NmcnpmContext : DbContext
     public virtual DbSet<TblBikeType> TblBikeTypes { get; set; }
 
     public virtual DbSet<TblBill> TblBills { get; set; }
-    
-    public virtual DbSet<TblBillDetail> TblBillDetail { get; set; }
+
+    public virtual DbSet<TblBillDetail> TblBillDetails { get; set; }
 
     public virtual DbSet<TblCreateBill> TblCreateBills { get; set; }
 
     public virtual DbSet<TblPermission> TblPermissions { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json")
-                .Build();
-            string connectionString = configuration.GetConnectionString("DefaultConnection");
-            optionsBuilder.UseSqlServer(connectionString);
-        }
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=PHUC\\SQLEXPRESS;Initial Catalog=NMCNPM;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TblAccount>(entity =>
@@ -55,14 +47,14 @@ public partial class NmcnpmContext : DbContext
 
             entity.Property(e => e.DDate).HasColumnName("dDate");
             entity.Property(e => e.SAccountName)
-                .HasMaxLength(20)
+                .HasMaxLength(50)
                 .HasColumnName("sAccountName");
             entity.Property(e => e.SPassword)
-                .HasMaxLength(10)
+                .HasMaxLength(100)
+                .IsUnicode(false)
                 .HasColumnName("sPassword");
-            entity.Property(e => e.FkIdPermission).HasColumnName("FkIdPermission");
             entity.Property(e => e.SPhoneNumber)
-                .HasMaxLength(15)
+                .HasMaxLength(11)
                 .HasColumnName("sPhoneNumber");
             entity.Property(e => e.SUserIdentification)
                 .HasMaxLength(20)
@@ -104,11 +96,11 @@ public partial class NmcnpmContext : DbContext
 
         modelBuilder.Entity<TblBikeBrand>(entity =>
         {
-            entity.HasKey(e => e.PkIdBikeBrand).HasName("PK__tblBikeB__02E62FE1582632C6");
+            entity.HasKey(e => e.PkIdBikeBrand).HasName("PK__tblBikeB__02E62FE177056DA6");
 
             entity.ToTable("tblBikeBrand");
 
-            entity.HasIndex(e => e.SName, "UQ__tblBikeB__79DF5959CE8BA688").IsUnique();
+            entity.HasIndex(e => e.SName, "UQ__tblBikeB__79DF595972E72658").IsUnique();
 
             entity.Property(e => e.SName)
                 .HasMaxLength(20)
@@ -117,7 +109,7 @@ public partial class NmcnpmContext : DbContext
 
         modelBuilder.Entity<TblBikeDetail>(entity =>
         {
-            entity.HasKey(e => e.PkIdBikeDetail).HasName("PK__tblBikeD__9596CA93FF0BB9D9");
+            entity.HasKey(e => e.PkIdBikeDetail).HasName("PK__tblBikeD__9596CA937FA59D10");
 
             entity.ToTable("tblBikeDetail");
 
@@ -144,11 +136,11 @@ public partial class NmcnpmContext : DbContext
 
         modelBuilder.Entity<TblBikeType>(entity =>
         {
-            entity.HasKey(e => e.PkIdBikeType).HasName("PK__tblBikeT__A92939E0508A3CCC");
+            entity.HasKey(e => e.PkIdBikeType).HasName("PK__tblBikeT__A92939E0CE0177AB");
 
             entity.ToTable("tblBikeType");
 
-            entity.HasIndex(e => e.SType, "UQ__tblBikeT__47012A9151EFF243").IsUnique();
+            entity.HasIndex(e => e.SType, "UQ__tblBikeT__47012A9148DEE03F").IsUnique();
 
             entity.Property(e => e.SType)
                 .HasMaxLength(20)
@@ -169,52 +161,38 @@ public partial class NmcnpmContext : DbContext
                 .HasColumnName("dEndTime");
             entity.Property(e => e.FIncidentalCosts).HasColumnName("fIncidentalCosts");
             entity.Property(e => e.IStatus).HasColumnName("iStatus");
-
-            entity.HasMany(d => d.FkIdBikes).WithMany(p => p.FkIdBills)
-                .UsingEntity<Dictionary<string, object>>(
-                    "TblBillDetail",
-                    r => r.HasOne<TblBike>().WithMany()
-                        .HasForeignKey("FkIdBike")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("fk_BillDetail_Bike"),
-                    l => l.HasOne<TblBill>().WithMany()
-                        .HasForeignKey("FkIdBill")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("fk_BillDetail_Bill"),
-                    j =>
-                    {
-                        j.HasKey("FkIdBill", "FkIdBike").HasName("PK__tblBillD__D21248C9B5F86271");
-                        j.ToTable("tblBillDetail");
-                    });
         });
-        
+
         modelBuilder.Entity<TblBillDetail>(entity =>
         {
-            entity.HasKey(e => new { e.FkIdBill, e.FkIdBike });
+            entity.HasKey(e => new { e.FkIdBill, e.FkIdBike }).HasName("PK__tblBillD__D21248C9B5F86271");
 
-            entity.HasOne(d => d.FkIdBillNavigation)
-                .WithMany(p => p.TblBillDetail)
-                .HasForeignKey(d => d.FkIdBill)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            entity.ToTable("tblBillDetail");
 
-            entity.HasOne(d => d.FkIdBikeNavigation)
-                .WithMany(p => p.TblBillDetail)
+            entity.HasOne(d => d.FkIdBikeNavigation).WithMany(p => p.TblBillDetails)
                 .HasForeignKey(d => d.FkIdBike)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_BillDetail_Bike");
+
+            entity.HasOne(d => d.FkIdBillNavigation).WithMany(p => p.TblBillDetails)
+                .HasForeignKey(d => d.FkIdBill)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_BillDetail_Bill");
         });
 
         modelBuilder.Entity<TblCreateBill>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("tblCreateBill");
+            entity.HasKey(e => new { e.FkIdUser, e.FkBillCode }).HasName("PK_HEHE");
 
-            entity.HasOne(d => d.FkBillCodeNavigation).WithMany()
+            entity.ToTable("tblCreateBill");
+
+
+            entity.HasOne(d => d.FkBillCodeNavigation).WithMany(p => p.TblCreateBills)
                 .HasForeignKey(d => d.FkBillCode)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_CreateBill_Bill");
 
-            entity.HasOne(d => d.FkIdUserNavigation).WithMany()
+            entity.HasOne(d => d.FkIdUserNavigation).WithMany(p => p.TblCreateBills)
                 .HasForeignKey(d => d.FkIdUser)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_CreateBill_User");
@@ -222,7 +200,7 @@ public partial class NmcnpmContext : DbContext
 
         modelBuilder.Entity<TblPermission>(entity =>
         {
-            entity.HasKey(e => e.PkIdPermission).HasName("PK__tblPermi__DADB96523ACC3141");
+            entity.HasKey(e => e.PkIdPermission).HasName("PK__tblPermi__DADB9652DD9531A3");
 
             entity.ToTable("tblPermission");
 

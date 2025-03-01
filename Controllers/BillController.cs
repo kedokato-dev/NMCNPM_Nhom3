@@ -23,7 +23,7 @@ namespace NMCNPM_Nhom3.Controllers
         public async Task<IActionResult> Index()
         {
             var bills = await _context.TblBills
-                .Include(b => b.TblBillDetail)
+                .Include(b => b.TblBillDetails)
                 .ThenInclude(bd => bd.FkIdBikeNavigation)
                 .Where(b => b.IStatus.HasValue && b.IStatus.Value == 1) // Chỉ lấy hóa đơn đang thuê
                 .ToListAsync();
@@ -123,7 +123,7 @@ namespace NMCNPM_Nhom3.Controllers
                 SAccountName = customerFullName,
                 SPhoneNumber = customerPhoneNumber,
                 SUserIdentification = customerIdCard,
-                DDate = DateTime.Now,
+                //DDate = DateTime.Now,
                 FkIdPermission = 2,
                 SPassword = "User@123" // Mặc định mật khẩu
             };
@@ -156,8 +156,8 @@ namespace NMCNPM_Nhom3.Controllers
                     FkIdBill = bill.PkBillCode,
                     FkIdBike = bikeId
                 };
-                _context.TblBillDetail.Add(billDetail);
-            }
+                _context.TblBillDetails.Add(billDetail);
+                }
             await _context.SaveChangesAsync();
         }
 
@@ -211,8 +211,8 @@ namespace NMCNPM_Nhom3.Controllers
             }
 
             var bill = await _context.TblBills
-                .Include(b => b.TblBillDetail)
-                .ThenInclude(bd => bd.FkIdBikeNavigation) 
+                .Include(b => b.TblBillDetails)
+                .ThenInclude(bd => bd.FkIdBikeNavigation)
                 .FirstOrDefaultAsync(m => m.PkBillCode == id);
 
             if (bill == null)
@@ -221,7 +221,7 @@ namespace NMCNPM_Nhom3.Controllers
             }
 
             // Lấy thông tin xe
-            var bikeInfo = bill.TblBillDetail.FirstOrDefault()?.FkIdBikeNavigation;
+            var bikeInfo = bill.TblBillDetails.FirstOrDefault()?.FkIdBikeNavigation;
             if (bikeInfo != null)
             {
                 ViewBag.BikeCode = bikeInfo.PkIdBike;
@@ -257,7 +257,7 @@ namespace NMCNPM_Nhom3.Controllers
                     }
 
                     // Cập nhật tình trạng xe
-                    var billDetail = await _context.TblBillDetail.FirstOrDefaultAsync(bd => bd.FkIdBill == id);
+                    var billDetail = await _context.TblBillDetails.FirstOrDefaultAsync(bd => bd.FkIdBill == id);
                     if (billDetail != null)
                     {
                         var bike = await _context.TblBikes.FindAsync(billDetail.FkIdBike);
