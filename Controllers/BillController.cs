@@ -5,9 +5,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NMCNPM_Nhom3.Controllers
 {
+    [Authorize(Roles = "Staff")]
     public class BillController : Controller
     {
         private readonly NmcnpmContext _context;

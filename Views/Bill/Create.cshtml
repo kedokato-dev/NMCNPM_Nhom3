@@ -15,7 +15,7 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-body">
-                    <form id="billForm">
+                    <form id="billForm" method="post" asp-action="Create">
                         <!-- CCCD -->
                         <div class="mb-3">
                             <label for="customerIdCard" class="form-label fw-bold">Số CCCD</label>
@@ -91,7 +91,7 @@
                             <!-- Danh sách xe đã chọn -->
                             <div id="selectedBikes" class="mt-3"></div>
 
-                            <button type="button" id="submitBillBtn" class="btn btn-primary w-100 mt-3 rounded-pill">Tạo Hóa Đơn</button>
+                            <button type="submit" id="submitBillBtn" class="btn btn-primary w-100 mt-3 rounded-pill">Tạo Hóa Đơn</button>
                         </div>
                     </form>
                 </div>
@@ -224,7 +224,7 @@
                             }
                         }
                     });
-                }, 2000);
+                }, 100);
             }
         });
 
@@ -247,26 +247,26 @@
         });
 
         // Gửi yêu cầu tạo hóa đơn
-        $('#submitBillBtn').click(function (e) {
-            e.preventDefault();  // Ngừng tải lại trang
-            var billData = $('#billForm').serialize(); // Lấy dữ liệu từ form
+        // $('#submitBillBtn').click(function (e) {
+        //     e.preventDefault();  Ngừng tải lại trang
+        //     var billData = $('#billForm').serialize(); Lấy dữ liệu từ form
 
-            $.ajax({
-                url: '@Url.Action("Create", "Bill")',
-                type: 'POST',
-                data: billData,
-                success: function (response) {
-                    if (response.success) {
-                        $('#messageContainer').html('<div class="alert alert-success">' + response.message + '</div>');
-                    } else {
-                        $('#messageContainer').html('<div class="alert alert-danger">' + response.message + '</div>');
-                    }
-                },
-                error: function () {
-                    $('#messageContainer').html('<div class="alert alert-danger">Có lỗi xảy ra, vui lòng thử lại sau.</div>');
-                }
-            });
-        });
+        //     $.ajax({
+        //         url: '@Url.Action("Create", "Bill")',
+        //         type: 'POST',
+        //         data: billData,
+        //         success: function (response) {
+        //             if (response.success) {
+        //                 $('#messageContainer').html('<div class="alert alert-success">' + response.message + '</div>');
+        //             } else {
+        //                 $('#messageContainer').html('<div class="alert alert-danger">' + response.message + '</div>');
+        //             }
+        //         },
+        //         error: function () {
+        //             $('#messageContainer').html('<div class="alert alert-danger">Có lỗi xảy ra, vui lòng thử lại sau.</div>');
+        //         }
+        //     });
+        // });
     });
 
 
