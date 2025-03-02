@@ -1,20 +1,24 @@
 @model IEnumerable<NMCNPM_Nhom3.Models.Entities.TblBill>
 
-<h1 class="mb-4 text-center">Quản lý hoá đơn</h1>
+@{
+    ViewData["Title"] = "Hóa đơn chưa thanh toán";
+}
+
+<h1 class="mb-4 mt-4 text-center text-primary">Hóa đơn chưa thanh toán</h1>
 
 <div class="text-center mb-3">
-    <a href="@Url.Action("Create")" class="btn btn-primary">Thêm mới hoá đơn</a>
+    <a href="@Url.Action("Create")" class="btn btn-primary">Tạo hóa đơn mới</a>
 </div>
 
 <div class="container">
     <table class="table table-bordered table-striped">
         <thead>
         <tr>
-            <th>Mã Bill</th>
+            <th>ID</th>
             <th>Thời gian bắt đầu</th>
             <th>Thời gian kết thúc</th>
-            <th>Phí phát sinh</th>
-            <th>Tình trạng</th>
+            @* <th>Phí phát sinh</th> *@
+            <th>Trạng thái thuê</th>
             <th>Hành động</th>
         </tr>
         </thead>
@@ -25,7 +29,7 @@
                 <td>@bill.PkBillCode</td>
                 <td>@bill.DBeginTime.ToString("dd/MM/yyyy HH:mm")</td>
                 <td class="@(bill.IStatus == 0 ? "disabled-field" : "")">@bill.DEndTime.ToString("dd/MM/yyyy HH:mm")</td>
-                <td>@bill.FIncidentalCosts</td>
+                @* <td>@bill.FIncidentalCosts</td> *@
                 <td>@(bill.IStatus.HasValue && bill.IStatus.Value == 1 ? "Đang được thuê" : "Đang trống")</td>
                 <td>
                     <a href="@Url.Action("Edit", new { id = bill.PkBillCode })" class="btn btn-warning">Xem chi tiết / Cập nhật</a>
@@ -39,8 +43,8 @@
 <style>
     /* Bôi màu xám các trường không nhập được */
     .disabled-field {
-        background-color: #f0f0f0; /* Màu xám nhạt */
-        color: #777; /* Màu chữ xám */
-        pointer-events: none; /* Không cho phép tương tác */
+        background-color: #f0f0f0; 
+        color: #777; 
+        pointer-events: none; 
     }
 </style>

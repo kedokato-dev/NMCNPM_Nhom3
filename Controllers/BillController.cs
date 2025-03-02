@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using System.Linq.Expressions;
 
 namespace NMCNPM_Nhom3.Controllers
 {
@@ -32,7 +35,7 @@ namespace NMCNPM_Nhom3.Controllers
             return View(bills);
         }
 
-        
+
 
         // Xử lý tìm khách hàng theo CCCD
         [HttpGet]
@@ -61,6 +64,39 @@ namespace NMCNPM_Nhom3.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddCustomer(string customerIdCard, string customerName, string customerPhone)
+        {
+            if (string.IsNullOrEmpty(customerIdCard) || string.IsNullOrEmpty(customerName) || string.IsNullOrEmpty(customerPhone))
+            {
+                return Json(new { success = false, message = "Vui lòng nhập đầy đủ thông tin." });
+            }
+
+            // Kiểm tra xem CCCD đã tồn tại chưa
+            var existingCustomer = await _context.TblAccounts
+                .FirstOrDefaultAsync(u => u.SUserIdentification == customerIdCard);
+
+            if (existingCustomer != null)
+            {
+                return Json(new { success = false, message = "CCCD đã tồn tại trong hệ thống." });
+            }
+
+            // Thêm khách hàng mới
+            var newCustomer = new TblAccount
+            {
+                SUserIdentification = customerIdCard,
+                SAccountName = customerName,
+                SPhoneNumber = customerPhone,
+                FkIdPermission = 2, // Quyền mặc định cho khách hàng
+                SPassword = "User@123" // Mật khẩu mặc định
+            };
+
+            _context.TblAccounts.Add(newCustomer);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
         // Xử lý tìm xe theo mã
         [HttpGet]
         public async Task<IActionResult> SearchBike(int bikeCode)
@@ -74,6 +110,16 @@ namespace NMCNPM_Nhom3.Controllers
 
             if (bike != null)
             {
+                if (bike.SCondition == "Đã thuê")
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Xe đã được thuê",
+                        bikeStatus = bike.SCondition
+                    });
+                }
+
                 return Json(new
                 {
                     success = true,
@@ -81,7 +127,7 @@ namespace NMCNPM_Nhom3.Controllers
                     bikeCondition = bike.SCondition,
                     bikeStatus = bike.SStatus,
                     bikeRentalPrice = bike.FRentalPrice,
-                    bikeImage = bike.SImage
+
                 });
             }
             else
@@ -89,7 +135,7 @@ namespace NMCNPM_Nhom3.Controllers
                 return Json(new { success = false, message = "Xe không tồn tại." });
             }
         }
-        
+
         // GET: BillManager/Create
         public IActionResult Create()
         {
@@ -97,109 +143,129 @@ namespace NMCNPM_Nhom3.Controllers
         }
 
         // POST: BillManager/Create
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(TblBill bill, string customerIdCard, string customerFullName, string customerPhoneNumber, List<int> selectedBikeIds)
-    {
-        _logger.LogInformation("Tạo hóa đơn bắt đầu.");
-
-        // Kiểm tra thông tin CCCD hợp lệ
-        if (string.IsNullOrEmpty(customerIdCard) || !Regex.IsMatch(customerIdCard, @"^\d{12}$"))
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(TblBill bill, string customerIdCard, string customerFullName, string customerPhoneNumber, string selectedBikeIds)
         {
-            _logger.LogWarning("Số CCCD không hợp lệ: {customerIdCard}", customerIdCard);
-            return Json(new { success = false, message = "Số CCCD không hợp lệ." });
-        }
+            _logger.LogInformation("Tạo hóa đơn bắt đầu.");
 
-        _logger.LogInformation("Kiểm tra khách hàng trong database.");
-
-        // Kiểm tra thông tin khách hàng trong database
-        var existingCustomer = await _context.TblAccounts
-            .FirstOrDefaultAsync(u => u.SUserIdentification == customerIdCard);
-
-        // Nếu khách hàng chưa tồn tại, thêm mới
-        if (existingCustomer == null)
-        {
-            _logger.LogInformation("Khách hàng chưa tồn tại. Thêm mới khách hàng.");
-            existingCustomer = new TblAccount
+            // Sử dụng transaction để đảm bảo tính toàn vẹn dữ liệu
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                SAccountName = customerFullName,
-                SPhoneNumber = customerPhoneNumber,
-                SUserIdentification = customerIdCard,
-                //DDate = DateTime.Now,
-                FkIdPermission = 2,
-                SPassword = "User@123" // Mặc định mật khẩu
-            };
-
-            _context.TblAccounts.Add(existingCustomer);
-            await _context.SaveChangesAsync();
-        }
-
-        // Tạo hóa đơn
-        bill.DBeginTime = bill.DBeginTime == default(DateTime) ? DateTime.Now : bill.DBeginTime;
-        bill.DEndTime = bill.DBeginTime.AddHours(3);  // Cộng thêm 3 giờ vào thời gian bắt đầu để tính thời gian kết thúc
-        bill.IStatus = 1; // Đang thuê
-        //bill.FIncidentalCosts = null;
-
-        _logger.LogInformation("Lưu hóa đơn vào bảng TblBill.");
-
-        // Lưu vào bảng TblBill
-        _context.TblBills.Add(bill);
-        await _context.SaveChangesAsync();
-
-        // Lưu chi tiết hóa đơn (danh sách xe được thuê)
-        if (selectedBikeIds != null && selectedBikeIds.Any())
-        {
-            _logger.LogInformation("Lưu chi tiết hóa đơn (danh sách xe được thuê).");
-
-            foreach (var bikeId in selectedBikeIds)
-            {
-                var billDetail = new TblBillDetail
+                try
                 {
-                    FkIdBill = bill.PkBillCode,
-                    FkIdBike = bikeId
-                };
-                _context.TblBillDetails.Add(billDetail);
+                    // Kiểm tra thông tin khách hàng trong database
+                    var existingCustomer = await _context.TblAccounts
+                        .FirstOrDefaultAsync(u => u.SUserIdentification == customerIdCard);
+
+                    // Nếu khách hàng chưa tồn tại, thêm mới
+                    //if (existingCustomer == null)
+                    //{
+                    //    _logger.LogInformation("Khách hàng chưa tồn tại. Thêm mới khách hàng.");
+                    //    existingCustomer = new TblAccount
+                    //    {
+                    //        SAccountName = customerFullName,
+                    //        SPhoneNumber = customerPhoneNumber,
+                    //        SUserIdentification = customerIdCard,
+                    //        FkIdPermission = 2,
+                    //        SPassword = "User@123"
+                    //    };
+
+                    //    _context.TblAccounts.Add(existingCustomer);
+                    //    await _context.SaveChangesAsync();
+                    //}
+
+                    // Tạo hóa đơn
+                    bill.DBeginTime = bill.DBeginTime == default(DateTime) ? DateTime.Now : bill.DBeginTime;
+                    bill.DEndTime = bill.DBeginTime.AddHours(3);
+                    bill.IStatus = 1;
+
+                    _logger.LogInformation("Lưu hóa đơn vào bảng TblBill.");
+
+                    // Lưu vào bảng TblBill
+                    _context.TblBills.Add(bill);
+                    await _context.SaveChangesAsync();
+
+                    _logger.LogInformation("BillCode: {BillCode}", bill.PkBillCode);
+
+                    // Chuyển đổi selectedBikeIds từ JSON string sang List<int>
+                    List<int> bikeIds = new List<int>();
+                    if (!string.IsNullOrEmpty(selectedBikeIds))
+                    {
+                        bikeIds = JsonConvert.DeserializeObject<List<int>>(selectedBikeIds);
+                    }
+
+                    // Kiểm tra danh sách xe đã chọn
+                    if (bikeIds == null || !bikeIds.Any())
+                    {
+                        _logger.LogWarning("Không có xe nào được chọn.");
+                        return Json(new { success = false, message = "Không có xe nào được chọn." });
+                    }
+
+                    _logger.LogInformation("Danh sách xe đã chọn: {SelectedBikeIds}", string.Join(", ", bikeIds));
+
+                    // Lưu chi tiết hóa đơn (danh sách xe được thuê)
+                    foreach (var bikeId in bikeIds)
+                    {
+                        var billDetail = new TblBillDetail
+                        {
+                            FkIdBill = bill.PkBillCode,
+                            FkIdBike = bikeId
+                        };
+                        _context.TblBillDetails.Add(billDetail);
+                    }
+                    await _context.SaveChangesAsync();
+
+                    // Lưu thông tin nhân viên tạo hóa đơn
+                    var username = User.Identity.Name;
+                    var staff = await _context.TblAccounts.FirstOrDefaultAsync(u => u.SAccountName == username);
+
+                    if (staff != null)
+                    {
+                        var createBill = new TblCreateBill
+                        {
+                            FkIdUser = staff.PkIdUser,
+                            FkBillCode = bill.PkBillCode
+                        };
+
+                        _context.TblCreateBills.Add(createBill);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    // Lưu thông tin khách hàng vào bảng TblCreateBill (FkIdUser là ID của khách hàng)
+                    var customerCreateBill = new TblCreateBill
+                    {
+                        FkIdUser = existingCustomer.PkIdUser,
+                        FkBillCode = bill.PkBillCode
+                    };
+
+                    _context.TblCreateBills.Add(customerCreateBill);
+                    await _context.SaveChangesAsync();
+
+                    // Commit transaction
+                    await transaction.CommitAsync();
+
+                    _logger.LogInformation("Hóa đơn đã được tạo thành công. BillCode: {BillCode}", bill.PkBillCode);
+
+                    // Trả về thông báo thành công
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Hóa đơn đã được tạo thành công!",
+                        formattedStartTime = bill.DBeginTime.ToString("dd/MM/yy h:mm"),
+                        formattedEndTime = bill.DEndTime.ToString("dd/MM/yy h:mm")
+                    });
                 }
-            await _context.SaveChangesAsync();
+                catch (Exception ex)
+                {
+                    // Rollback transaction nếu có lỗi
+                    await transaction.RollbackAsync();
+                    _logger.LogError(ex, "Lỗi khi tạo hóa đơn.");
+                    return Json(new { success = false, message = "Có lỗi xảy ra khi tạo hóa đơn." });
+                }
+            }
         }
 
-        // Lưu thông tin nhân viên tạo hóa đơn
-        var username = User.Identity.Name;
-        var staff = await _context.TblAccounts.FirstOrDefaultAsync(u => u.SAccountName == username);
-
-        if (staff != null)
-        {
-            var createBill = new TblCreateBill
-            {
-                FkIdUser = staff.PkIdUser,
-                FkBillCode = bill.PkBillCode
-            };
-
-            _context.TblCreateBills.Add(createBill);
-            await _context.SaveChangesAsync();
-        }
-
-        // Lưu thông tin khách hàng vào bảng TblCreateBill (FkIdUser là ID của khách hàng)
-        var customerCreateBill = new TblCreateBill
-        {
-            FkIdUser = existingCustomer.PkIdUser, // Lưu ID của khách hàng vào FkIdUser
-            FkBillCode = bill.PkBillCode
-        };
-
-        _context.TblCreateBills.Add(customerCreateBill);
-        await _context.SaveChangesAsync();
-
-        _logger.LogInformation("Hóa đơn đã được tạo thành công. BillCode: {BillCode}", bill.PkBillCode);
-
-        // Trả về thông báo thành công
-        return Json(new 
-        {
-            success = true,
-            message = "Hóa đơn đã được tạo thành công!",
-            formattedStartTime = bill.DBeginTime.ToString("dd/MM/yy h:mm"),
-            formattedEndTime = bill.DEndTime.ToString("dd/MM/yy h:mm")
-        });
-    }
 
 
 
@@ -215,6 +281,8 @@ namespace NMCNPM_Nhom3.Controllers
             var bill = await _context.TblBills
                 .Include(b => b.TblBillDetails)
                 .ThenInclude(bd => bd.FkIdBikeNavigation)
+                .Include(b => b.TblCreateBills)
+                .ThenInclude(cb => cb.FkIdUserNavigation)
                 .FirstOrDefaultAsync(m => m.PkBillCode == id);
 
             if (bill == null)
@@ -222,13 +290,16 @@ namespace NMCNPM_Nhom3.Controllers
                 return NotFound();
             }
 
-            // Lấy thông tin xe
-            var bikeInfo = bill.TblBillDetails.FirstOrDefault()?.FkIdBikeNavigation;
-            if (bikeInfo != null)
+            var customer = bill.TblCreateBills.FirstOrDefault(cb => cb.FkIdUserNavigation.FkIdPermission == 2)?.FkIdUserNavigation;
+            if (customer != null)
             {
-                ViewBag.BikeCode = bikeInfo.PkIdBike;
-                ViewBag.BikeCondition = bikeInfo.SCondition;
+                ViewBag.CustomerName = customer.SAccountName;
+                ViewBag.CustomerPhone = customer.SPhoneNumber;
             }
+
+            // Lấy thông tin xe
+            var bikeList = bill.TblBillDetails.Select(bd => bd.FkIdBikeNavigation).ToList();
+            ViewBag.BikeList = bikeList;
 
             return View(bill);
         }
@@ -236,59 +307,90 @@ namespace NMCNPM_Nhom3.Controllers
         // POST: BillManager/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, TblBill bill, string bikeCondition, int IStatus)
+        public async Task<IActionResult> Edit(int id, TblBill bill, int PaymentStatus)
         {
             if (id != bill.PkBillCode)
             {
-                return NotFound();
+                return HandleError("Không tìm thấy hóa đơn!");
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                foreach (var error in errors)
                 {
-                    // Cập nhật thông tin hóa đơn
-                    var existingBill = await _context.TblBills.FindAsync(id);
-                    if (existingBill != null)
-                    {
-                        existingBill.DEndTime = bill.DEndTime;
-                        existingBill.FIncidentalCosts = bill.FIncidentalCosts;
-                        existingBill.IStatus = IStatus; // Cập nhật trạng thái hóa đơn
-
-                        _context.Update(existingBill);
-                    }
-
-                    // Cập nhật tình trạng xe
-                    var billDetail = await _context.TblBillDetails.FirstOrDefaultAsync(bd => bd.FkIdBill == id);
-                    if (billDetail != null)
-                    {
-                        var bike = await _context.TblBikes.FindAsync(billDetail.FkIdBike);
-                        if (bike != null)
-                        {
-                            bike.SCondition = bikeCondition;
-                            _context.Update(bike);
-                        }
-                    }
-
-                    await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Hóa đơn đã được cập nhật thành công!";
+                    _logger.LogError(error.ErrorMessage);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BillExists(bill.PkBillCode))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                LogModelStateErrors();
+                return HandleError("Dữ liệu không hợp lệ!", bill);
             }
 
-            TempData["ErrorMessage"] = "Có lỗi xảy ra khi cập nhật hóa đơn!";
-            return View(bill);
+            try
+            {
+                var existingBill = await _context.TblBills
+                    .Include(b => b.TblBillDetails)
+                    .ThenInclude(bd => bd.FkIdBikeNavigation)
+                    .FirstOrDefaultAsync(b => b.PkBillCode == id);
+
+                if (existingBill == null)
+                {
+                    return HandleError("Không tìm thấy hóa đơn!");
+                }
+
+                // Cập nhật hóa đơn (Không cập nhật điều kiện xe)
+                UpdateBill(existingBill, bill, PaymentStatus);
+
+                // Bỏ phần cập nhật điều kiện xe
+                //await UpdateBikeCondition(existingBill, "Chưa thuê");
+
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Hóa đơn đã được cập nhật thành công!";
+                return View(bill);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError(ex, "Lỗi DbUpdateConcurrencyException khi cập nhật hóa đơn.");
+                return HandleError("Lỗi đồng thời khi cập nhật hóa đơn!");
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError(ex, "Lỗi DbUpdateException khi cập nhật hóa đơn.");
+                return HandleError("Lỗi khi lưu dữ liệu vào database!");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi không xác định khi cập nhật hóa đơn.");
+                return HandleError("Lỗi hệ thống không xác định!");
+            }
+        }
+
+        private void UpdateBill(TblBill existingBill, TblBill newBill, int paymentStatus)
+        {
+            existingBill.DBeginTime = newBill.DBeginTime;
+            existingBill.DEndTime = newBill.DEndTime;
+            existingBill.FIncidentalCosts = newBill.FIncidentalCosts;
+            existingBill.IStatus = paymentStatus;
+            _context.Update(existingBill);
+        }
+
+        private void LogModelStateErrors()
+        {
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
+            foreach (var error in errors)
+            {
+                _logger.LogError(error.ErrorMessage);
+            }
+        }
+
+        private IActionResult HandleError(string message, TblBill bill = null)
+        {
+            TempData["ErrorMessage"] = message;
+            if (bill != null)
+            {
+                return View(bill);
+            }
+            return RedirectToAction(nameof(Index));
         }
 
 

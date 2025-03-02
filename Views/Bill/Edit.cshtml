@@ -1,86 +1,142 @@
 @model NMCNPM_Nhom3.Models.Entities.TblBill
 
 @{
-    ViewData["Title"] = "Chỉnh sửa Hóa Đơn";
+	ViewData["Title"] = "Cập nhật hóa đơn";
 }
 
-<div class="container mt-4">
-    <h2 class="text-primary text-center">Chỉnh sửa Hóa Đơn</h2>
-    <hr>
-
-    <!-- Hiển thị thông báo thành công hoặc lỗi -->
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Thành công!</strong> @TempData["SuccessMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Lỗi!</strong> @TempData["ErrorMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-body">
-                    <form asp-action="Edit" method="post">
-                        <!-- Mã hóa đơn (bôi xám và không thể chỉnh sửa) -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Mã hóa đơn</label>
-                            <input type="text" class="form-control disabled-field" value="@Model.PkBillCode" readonly />
-                        </div>
-
-                        <!-- Thời gian bắt đầu (bôi xám và không thể chỉnh sửa) -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Thời gian bắt đầu</label>
-                            <input type="text" class="form-control disabled-field" value="@Model.DBeginTime.ToString("dd/MM/yyyy")" readonly />
-                        </div>
-
-                        <!-- Thời gian kết thúc (bôi xám và không thể chỉnh sửa) -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Thời gian kết thúc</label>
-                            <input type="text" class="form-control disabled-field" value="@Model.DEndTime.ToString("dd/MM/yyyy")" readonly />
-                        </div>
-
-                        <!-- Chi phí phát sinh -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Phí phát sinh</label>
-                            <input type="text" class="form-control" name="FIncidentalCosts" value="@Model.FIncidentalCosts" />
-                        </div>
-
-                        <!-- Mã xe (bôi xám và không thể chỉnh sửa) -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Mã xe</label>
-                            <input type="text" class="form-control disabled-field" value="@ViewBag.BikeCode" readonly />
-                        </div>
-
-                        <!-- Tình trạng xe -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Tình trạng xe</label>
-                            <input type="text" class="form-control" name="bikeCondition" value="@ViewBag.BikeCondition" />
-                        </div>
-
-                        <hr>
-
-                        <!-- Nút Cập nhật -->
-                        <button type="submit" class="btn btn-primary w-100 rounded-pill">Cập nhật Hóa Đơn</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <style>
-    /* Bôi màu xám các trường không nhập được */
-    .disabled-field {
-        background-color: #f0f0f0; /* Màu xám nhạt */
-        color: #777; /* Màu chữ xám */
-    }
+	.custom-select {
+		appearance: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="18px" height="18px"><path d="M7 10l5 5 5-5z"/></svg>');
+		background-repeat: no-repeat;
+		background-position: right 10px center;
+		padding-right: 30px;
+	}
+
+	/* Bôi màu xám các trường không nhập được */
+	.disabled-field {
+		background-color: #f0f0f0;
+		color: #777;
+	}
 </style>
+
+<div class="container mt-4">
+	<h2 class="text-primary text-center">Cập nhập hóa đơn</h2>
+	<hr>
+
+	<!-- Hiển thị thông báo thành công hoặc lỗi -->
+	@if (TempData["SuccessMessage"] != null)
+	{
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			<strong>Thành công!</strong> @TempData["SuccessMessage"]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	}
+
+	@if (TempData["ErrorMessage"] != null)
+	{
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			<strong>Lỗi!</strong> @TempData["ErrorMessage"]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	}
+
+	<div class="row justify-content-center">
+		<div class="col-md-8">
+			<div class="card shadow">
+				<div class="card-body">
+					<!-- Form gửi dữ liệu qua POST -->
+					<form asp-action="Edit" method="post">
+						<!-- Mã hóa đơn -->
+						<div class="mb-3">
+							<label class="form-label fw-bold">Mã hóa đơn</label>
+							<input type="text" class="form-control disabled-field" value="@Model.PkBillCode" readonly />
+						</div>
+
+						<!-- Thông tin khách hàng -->
+						<div class="mb-3">
+							<label class="form-label fw-bold">Tên khách hàng</label>
+							<input type="text" class="form-control disabled-field" value="@ViewBag.CustomerName" readonly />
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label fw-bold">Số điện thoại</label>
+							<input type="text" class="form-control disabled-field" value="@ViewBag.CustomerPhone" readonly />
+						</div>
+
+						<!-- Thời gian bắt đầu -->
+						<div class="mb-3">
+							<label class="form-label fw-bold">Thời gian bắt đầu</label>
+							<input type="datetime-local" class="form-control" name="DBeginTime" value="@Model.DBeginTime.ToString("yyyy-MM-ddTHH:mm")" />
+						</div>
+
+						<!-- Thời gian kết thúc -->
+						<div class="mb-3">
+							<label class="form-label fw-bold">Thời gian kết thúc</label>
+							<input type="datetime-local" class="form-control" name="DEndTime" value="@Model.DEndTime.ToString("yyyy-MM-ddTHH:mm")" />
+						</div>
+
+						<!-- Chi phí phát sinh -->
+						<div class="mb-3">
+							<label class="form-label fw-bold">Phí phát sinh</label>
+							<input type="text" class="form-control" name="FIncidentalCosts" value="@Model.FIncidentalCosts" />
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label fw-bold">Danh sách xe</label>
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Mã xe</th>
+										<th>Tên xe</th>
+										@* <th>Tình trạng</th> *@
+									</tr>
+								</thead>
+								<tbody>
+									@if (ViewBag.BikeList != null)
+									{
+										@foreach (var bike in ViewBag.BikeList)
+										{
+											<tr>
+												<td>@bike.PkIdBike</td>
+												<td>@bike.SName</td>
+												@* <td>@bike.SCondition</td> *@
+											</tr>
+										}
+									}
+								</tbody>
+							</table>
+						</div>
+
+						<!-- Trạng thái thanh toán -->
+						<div class="mb-3">
+							<label class="form-label fw-bold">Trạng thái</label>
+							<span style="font-size: 0.8em; color: red;">*</span>
+							<select class="form-select" name="PaymentStatus">
+								<option value="0" selected="@(Model.IStatus == 0 ? "selected" : null)">Trống</option>
+								<option value="1" selected="@(Model.IStatus == 1 ? "selected" : null)">Đang được thuê</option>
+							</select>
+						</div>
+
+						<hr>
+
+						<input type="hidden" asp-for="PkBillCode" />
+
+						<span style="font-size: 0.8em; color: red;">*Kiểm tra kĩ trạng thái. Nhấn cập nhật sẽ không thể hoàn tác</span>
+
+
+						<!-- Nút Cập nhật -->
+						<button type="submit" class="btn btn-primary w-100 mt-5">Cập nhật</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="mt-3 text-center">
+		<a href="@Url.Action("Index", "Bill")" class="btn btn-secondary">
+			<i class="fas fa-arrow-left"></i> Quay lại
+		</a>
+	</div>
+</div>
