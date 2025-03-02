@@ -32,7 +32,7 @@ namespace NMCNPM_Nhom3.Controllers
         [HttpPost]
         public IActionResult Create(TblAccount account)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 ViewBag.SuccessMessage = "Thêm tài khoản thất bại";
                 ViewBag.RedirectUrl = Url.Action("Create", "Staff");
@@ -94,12 +94,12 @@ namespace NMCNPM_Nhom3.Controllers
 
             if (isPhoneNumberExist)
             {
-                ModelState.AddModelError("SPhoneNumber", "Số điện thoại đã tồn tại.");
+                ViewBag.SuccessMessage = "Số điện thoại đã tồn tại trong hệ thống";
                 return View(account);
             }
             if (isCCCDExist)
             {
-                ModelState.AddModelError("SUserIdentification", "Số CCCD đã tồn tại.");
+                ViewBag.SuccessMessage = "CCCD đã tồn tại trong hệ thống";
                 return View(account);
             }
 
