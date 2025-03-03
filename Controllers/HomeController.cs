@@ -38,7 +38,7 @@ namespace NMCNPM_Nhom3.Controllers
                 .FirstOrDefaultAsync(u => u.SPhoneNumber == username);
 
             // Kiểm tra tài khoản có tồn tại không
-            if (user == null)//|| !isCorrectPassword(password, user.SPassword)
+            if (user == null || !isCorrectPassword(password, user.SPassword))//
             {
                 return Json(new { success = false, message = "Tên đăng nhập hoặc mật khẩu không đúng!" });
             }

@@ -107,6 +107,10 @@ namespace NMCNPM_Nhom3.Controllers
                     Console.WriteLine(ex.Message);
                 }
             }
+            else
+            {
+                TempData["ErrorMessage"] = "Thông tin không hợp lệ";
+            }
 
             var brands = _context.TblBikeBrands.ToList();
             var types = _context.TblBikeTypes.ToList();
