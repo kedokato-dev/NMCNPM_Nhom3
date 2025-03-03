@@ -39,10 +39,16 @@ namespace NMCNPM_Nhom3.Controllers
                 return View(account);
             }
 
-            if (_context.TblAccounts.Any(a => a.SPhoneNumber == account.SPhoneNumber) ||
-                _context.TblAccounts.Any(a => a.SUserIdentification == account.SUserIdentification))
+            if (_context.TblAccounts.Any(a => a.SPhoneNumber == account.SPhoneNumber))
             {
-                ViewBag.SuccessMessage = "Tài khoản này đã tồn tại";
+                ViewBag.SuccessMessage = "Số điện thoại đã tồn tại trong hệ thống";
+                ViewBag.RedirectUrl = Url.Action("Create", "Staff");
+                return View(account);
+            }
+
+            if(_context.TblAccounts.Any(a => a.SUserIdentification == account.SUserIdentification))
+            {
+                ViewBag.SuccessMessage = "CCCD đã tồn tại trong hệ thống";
                 ViewBag.RedirectUrl = Url.Action("Create", "Staff");
                 return View(account);
             }
