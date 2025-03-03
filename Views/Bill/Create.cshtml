@@ -4,12 +4,21 @@
     ViewData["Title"] = "Tạo Hóa Đơn";
 }
 
+<style>
+    .custom-select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="18px" height="18px"><path d="M7 10l5 5 5-5z"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 30px;
+    }
+</style>
+
 <div class="container mt-4">
     <h2 class="text-primary text-center">Tạo Hóa Đơn</h2>
     <hr>
-
-    <!-- Hiển thị thông báo thành công hoặc lỗi -->
-    <div id="messageContainer"></div> <!-- Div để hiển thị thông báo -->
 
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -19,42 +28,45 @@
                         <!-- CCCD -->
                         <div class="mb-3">
                             <label for="customerIdCard" class="form-label fw-bold">Số CCCD</label>
-                            <input type="text" class="form-control" id="customerIdCard" name="customerIdCard" required maxlength="12" />
+                            <input type="text" class="form-control" id="customerIdCard" name="customerIdCard" pattern="\d{12}" required maxlength="12" title="CCCD có 12 số" />
                             <small class="text-danger d-none" id="cccdError">Số CCCD không hợp lệ!</small>
                         </div>
 
                         <!-- Thông tin khách hàng -->
                         <div id="customerInfo" class="d-none">
                             <div class="mb-3">
-                                <label for="customerName" class="form-label fw-bold">👤 Họ tên khách hàng</label>
+                                <label for="customerName" class="form-label fw-bold">Họ tên</label>
                                 <input type="text" class="form-control" id="customerName" name="customerName" required />
                                 <small class="text-danger d-none" id="nameError">Họ tên phải có ít nhất 2 ký tự chữ cái!</small>
                             </div>
 
                             <div class="mb-3">
-                                <label for="customerPhone" class="form-label fw-bold">Số điện thoại khách hàng</label>
+                                <label for="customerPhone" class="form-label fw-bold">Số điện thoại</label>
                                 <input type="text" class="form-control" id="customerPhone" name="customerPhone" required />
                                 <small class="text-danger d-none" id="phoneError">Số điện thoại phải có 10 hoặc 11 chữ số!</small>
                             </div>
 
-                            <button type="button" class="btn btn-primary w-100 rounded-pill" id="nextStepBtn">➡ Tiếp theo</button>
+                            <button type="button" class="btn btn-primary w-100" id="nextStepBtn">Tiếp theo</button>
+                        </div>
+
+                        <!-- Form thêm khách hàng mới (ẩn ban đầu) -->
+                        <div id="addCustomerForm" class="d-none">
+                            <div class="mb-3">
+                                <label for="newCustomerName" class="form-label fw-bold">Họ tên</label>
+                                <input type="text" class="form-control" id="newCustomerName" name="newCustomerName" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="newCustomerPhone" class="form-label fw-bold">Số điện thoại</label>
+                                <input type="text" class="form-control" id="newCustomerPhone" name="newCustomerPhone" />
+                            </div>
+                            <button type="button" class="btn btn-success" id="addCustomerBtn">Thêm khách hàng</button>
                         </div>
 
                         <!-- Thông tin hóa đơn (Ẩn ban đầu) -->
                         <div id="billDetails" class="d-none">
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Thời gian bắt đầu</label>
-                                <input type="datetime-local" class="form-control" id="startTime" name="DBeginTime" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required />
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Thời gian kết thúc</label>
-                                <input type="datetime-local" class="form-control" id="endTime" name="DEndTime" />
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Trạng thái thuê</label>
-                                <select class="form-control" name="IStatus">
+                                <label class="mt-4 form-label fw-bold">Trạng thái thuê</label>
+                                <select class="form-control custom-select" name="IStatus">
                                     <option value="1">Đang thuê</option>
                                     <option value="0">Trống</option>
                                 </select>
@@ -62,12 +74,7 @@
 
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Nhân viên tạo</label>
-                                <input type="text" class="form-control" id="staffName" name="staffName" value="@User.Identity.Name" readonly style="background-color: #f0f0f0;"/>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Phí phát sinh</label>
-                                <input type="number" class="form-control" name="FIncidentalCosts" step="0.1" />
+                                <input type="text" class="form-control" id="staffName" name="staffName" value="@User.Identity.Name" readonly style="background-color: #f0f0f0;" />
                             </div>
 
                             <!-- Mã xe -->
@@ -81,9 +88,9 @@
                                 <h5>Thông tin xe</h5>
                                 <div><strong>Tên xe:</strong> <span id="bikeName"></span></div>
                                 <div><strong>Trạng thái:</strong> <span id="bikeStatus"></span></div>
+                                <small class="text-danger d-none" id="bikeStatusError">Xe đã được thuê!</small>
                                 <div><strong>Điều kiện xe:</strong> <span id="bikeCondition"></span></div>
                                 <div><strong>Giá thuê:</strong> <span id="bikeRentalPrice"></span></div>
-                                <img id="bikeImage" src="@Url.Content("~/assets/resources/@Model.SImage")" class="img-fluid mt-2" alt="Bike Image" />
 
                                 <button type="button" class="btn btn-success mt-2" id="addBikeBtn">Thêm xe</button>
                             </div>
@@ -91,18 +98,28 @@
                             <!-- Danh sách xe đã chọn -->
                             <div id="selectedBikes" class="mt-3"></div>
 
-                            <button type="submit" id="submitBillBtn" class="btn btn-primary w-100 mt-3 rounded-pill">Tạo Hóa Đơn</button>
+                            <input type="hidden" id="selectedBikeIds" name="selectedBikeIds" />
+
+                            <button type="submit" id="submitBillBtn" class="btn btn-primary w-100 mt-3">Tạo Hóa Đơn</button>
+
+                            <!-- Hiển thị thông báo thành công hoặc lỗi -->
+                            <div class="mt-4" id="messageContainer"></div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    <div class="mt-3 text-center">
+        <a href="@Url.Action("Index", "Bill")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
 </div>
 
 <script>
     $(document).ready(function () {
-        // Kiểm tra CCCD realtime
+        // Kiểm tra CCCD
         $('#customerIdCard').on('input', function () {
             var cccd = $(this).val().trim();
             if (/^\d{12}$/.test(cccd)) {
@@ -114,82 +131,85 @@
                         if (response.success) {
                             $('#customerName').val(response.customerName);
                             $('#customerPhone').val(response.customerPhone);
+                            $('#customerInfo').removeClass('d-none');
+                            $('#addCustomerForm').addClass('d-none');
+
+                            // Thêm required khi hiển thị
+                            $('#customerName').attr('required', true);
+                            $('#customerPhone').attr('required', true);
                         } else {
-                            $('#customerName').val('');
-                            $('#customerPhone').val('');
+                            $('#customerInfo').addClass('d-none');
+                            $('#addCustomerForm').removeClass('d-none');
+
+                            // Bỏ required khi ẩn
+                            $('#customerName').removeAttr('required');
+                            $('#customerPhone').removeAttr('required');
                         }
-                        $('#customerInfo').removeClass('d-none');
                     }
                 });
             } else {
                 $('#customerInfo').addClass('d-none');
+                $('#addCustomerForm').addClass('d-none');
+
+                // Bỏ required khi ẩn
+                $('#customerName').removeAttr('required');
+                $('#customerPhone').removeAttr('required');
             }
         });
 
-        // Tự động tính toán thời gian kết thúc (DEndTime) khi trang được load
-        var startTime = new Date($('#startTime').val());
-        startTime.setHours(startTime.getHours() + 3);  // Cộng thêm 3 giờ vào thời gian bắt đầu
+        // Xử lý thêm khách hàng mới
+        $('#addCustomerBtn').click(function () {
+            var customerIdCard = $('#customerIdCard').val().trim();
+            var customerName = $('#newCustomerName').val().trim();
+            var customerPhone = $('#newCustomerPhone').val().trim();
 
-        // Cập nhật giá trị 'endTime' với định dạng dd/MM/yyyy h:mm
-        var formattedEndTime = (startTime.getDate() < 10 ? '0' + startTime.getDate() : startTime.getDate()) + '/' +
-            (startTime.getMonth() + 1 < 10 ? '0' + (startTime.getMonth() + 1) : (startTime.getMonth() + 1)) + '/' +
-            startTime.getFullYear().toString().slice(2) + ' ' +
-            (startTime.getHours() < 10 ? '0' + startTime.getHours() : startTime.getHours()) + ':' +
-            (startTime.getMinutes() < 10 ? '0' + startTime.getMinutes() : startTime.getMinutes());
-
-        $('#endTime').val(formattedEndTime);
-
-        // Kiểm tra và đảm bảo thời gian kết thúc (DEndTime) lớn hơn thời gian bắt đầu ít nhất 3 giờ khi người dùng thay đổi thời gian bắt đầu
-        $('#startTime').on('change', function () {
-            var startTime = new Date($(this).val());
-            var endTime = new Date($('#endTime').val());
-
-            // Đảm bảo endTime luôn lớn hơn startTime ít nhất 3 giờ
-            if (endTime <= startTime) {
-                startTime.setHours(startTime.getHours() + 3);  // Cộng thêm 3 giờ
-                var formattedEndTime = (startTime.getDate() < 10 ? '0' + startTime.getDate() : startTime.getDate()) + '/' +
-                    (startTime.getMonth() + 1 < 10 ? '0' + (startTime.getMonth() + 1) : (startTime.getMonth() + 1)) + '/' +
-                    startTime.getFullYear().toString().slice(2) + ' ' +
-                    (startTime.getHours() < 10 ? '0' + startTime.getHours() : startTime.getHours()) + ':' +
-                    (startTime.getMinutes() < 10 ? '0' + startTime.getMinutes() : startTime.getMinutes());
-                $('#endTime').val(formattedEndTime);
+            if (!customerName || !customerPhone) {
+                alert('Vui lòng nhập đầy đủ thông tin khách hàng.');
+                return;
             }
+
+            $.ajax({
+                url: '@Url.Action("AddCustomer", "Bill")',
+                type: 'POST',
+                data: {
+                    customerIdCard: customerIdCard,
+                    customerName: customerName,
+                    customerPhone: customerPhone
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Cập nhật thông tin khách hàng vừa thêm
+                        $('#customerName').val(customerName);
+                        $('#customerPhone').val(customerPhone);
+                        $('#customerInfo').removeClass('d-none');
+                        $('#addCustomerForm').addClass('d-none');
+
+                        alert('Thêm khách hàng thành công!');
+                    } else {
+                        
+                        alert('Có lỗi xảy ra khi thêm khách hàng.');
+                    }
+                }
+            });
         });
 
-        // Kiểm tra và đảm bảo thời gian kết thúc (DEndTime) lớn hơn thời gian bắt đầu ít nhất 3 giờ khi người dùng thay đổi endTime
-        $('#endTime').on('change', function () {
-            var startTime = new Date($('#startTime').val());
-            var endTime = new Date($(this).val());
-
-            // Nếu thời gian kết thúc nhỏ hơn hoặc bằng thời gian bắt đầu, cập nhật thời gian kết thúc
-            if (endTime <= startTime) {
-                startTime.setHours(startTime.getHours() + 3);  // Cộng thêm 3 giờ
-                var formattedEndTime = (startTime.getDate() < 10 ? '0' + startTime.getDate() : startTime.getDate()) + '/' +
-                    (startTime.getMonth() + 1 < 10 ? '0' + (startTime.getMonth() + 1) : (startTime.getMonth() + 1)) + '/' +
-                    startTime.getFullYear().toString().slice(2) + ' ' +
-                    (startTime.getHours() < 10 ? '0' + startTime.getHours() : startTime.getHours()) + ':' +
-                    (startTime.getMinutes() < 10 ? '0' + startTime.getMinutes() : startTime.getMinutes());
-                $('#endTime').val(formattedEndTime);
-            }
-        });
-
-        // Kiểm tra số điện thoại realtime
+        // Kiểm tra số điện thoại
         $('#customerPhone').on('input', function () {
             var phone = $(this).val().trim();
             if (!/^\d{10,11}$/.test(phone)) {
-                $('#phoneError').removeClass('d-none'); // Hiển thị lỗi
+                $('#phoneError').removeClass('d-none'); 
             } else {
-                $('#phoneError').addClass('d-none'); // Ẩn lỗi
+                $('#phoneError').addClass('d-none'); 
             }
         });
 
-        // Kiểm tra họ tên realtime
+        // Kiểm tra họ tên
         $('#customerName').on('input', function () {
             var name = $(this).val().trim();
             if (!/^[A-Za-zÀ-ỹ\s]{2,}$/.test(name)) {
-                $('#nameError').removeClass('d-none'); // Hiển thị lỗi
+                $('#nameError').removeClass('d-none'); 
             } else {
-                $('#nameError').addClass('d-none'); // Ẩn lỗi
+                $('#nameError').addClass('d-none'); 
             }
         });
 
@@ -217,10 +237,21 @@
                                 $('#bikeStatus').text(response.bikeStatus);
                                 $('#bikeCondition').text(response.bikeCondition);
                                 $('#bikeRentalPrice').text(response.bikeRentalPrice);
-                                $('#bikeImage').attr('src', response.bikeImage);
+                                $('#bikeStatusError').addClass('d-none');
+                                // Kiểm tra trạng thái xe
+                                if (response.bikeStatus === "Đã thuê") {
+                                    $('#bikeStatusError').removeClass('d-none');
+                                    $('#addBikeBtn').prop('disabled', true); // Khóa nút thêm
+                                } else {
+                                    $('#addBikeBtn').prop('disabled', false); // Mở khóa nút
+                                }
+
                                 $('#bikeInfo').removeClass('d-none');
                             } else {
                                 $('#bikeInfo').addClass('d-none');
+                                if (response.message === "Xe đã được thuê") {
+                                    alert(response.message);
+                                }
                             }
                         }
                     });
@@ -228,46 +259,84 @@
             }
         });
 
-        // Thêm xe vào danh sách
-        $('#addBikeBtn').click(function () {
-            var bikeName = $('#bikeName').text();
+        var selectedBikes = [];
+        $('#addBikeBtn').click(function() {
             var bikeId = $('#bikeCode').val();
-            var bikeInfo = `<div class="p-2 border rounded mt-2">
-                        <strong>${bikeName}</strong> - Mã: ${bikeId}
-                        <button class="btn btn-danger btn-sm ms-2 removeBike">Xóa</button>
-                    </div>`;
-            $('#selectedBikes').append(bikeInfo);
-            $('#bikeInfo').addClass('d-none');
-            $('#bikeCode').val('');
+            if (bikeId && !selectedBikes.includes(bikeId)) { // Kiểm tra xem xe đã được thêm chưa
+                selectedBikes.push(bikeId);
+                // Hiển thị xe đã chọn
+                var bikeInfo = `<div class="p-2 border rounded mt-2">
+                                    <strong>${bikeId}</strong>
+                                    <button class="btn btn-danger btn-sm ms-2 removeBike" data-bike-id="${bikeId}">Xóa</button>
+                                 </div>`;
+                $('#selectedBikes').append(bikeInfo);
+                $('#bikeCode').val('');
+                $('#selectedBikeIds').val(JSON.stringify(selectedBikes));
+            }
         });
 
         // Xóa xe khỏi danh sách
         $(document).on('click', '.removeBike', function () {
+            var bikeId = $(this).data('bike-id');
+            selectedBikes = selectedBikes.filter(id => id != bikeId); //xóa xe khỏi array
             $(this).parent().remove();
+            $('#selectedBikeIds').val(JSON.stringify(selectedBikes));
         });
 
         // Gửi yêu cầu tạo hóa đơn
-        // $('#submitBillBtn').click(function (e) {
-        //     e.preventDefault();  Ngừng tải lại trang
-        //     var billData = $('#billForm').serialize(); Lấy dữ liệu từ form
+        $('#billForm').submit(function (e) {
+            e.preventDefault();
+            var isValid = true;
 
-        //     $.ajax({
-        //         url: '@Url.Action("Create", "Bill")',
-        //         type: 'POST',
-        //         data: billData,
-        //         success: function (response) {
-        //             if (response.success) {
-        //                 $('#messageContainer').html('<div class="alert alert-success">' + response.message + '</div>');
-        //             } else {
-        //                 $('#messageContainer').html('<div class="alert alert-danger">' + response.message + '</div>');
-        //             }
-        //         },
-        //         error: function () {
-        //             $('#messageContainer').html('<div class="alert alert-danger">Có lỗi xảy ra, vui lòng thử lại sau.</div>');
-        //         }
-        //     });
-        // });
+            // Kiểm tra các trường hiển thị
+            // if ($('#customerInfo').is(':visible')) {
+            //     if (!$('#customerName').val()) {
+            //         isValid = false;
+            //         $('#customerName').focus();
+            //     }
+            //     if (!$('#customerPhone').val()) {
+            //         isValid = false;
+            //         $('#customerPhone').focus();
+            //     }
+            // }
+
+            // if ($('#addCustomerForm').is(':visible')) {
+            //     if (!$('#newCustomerName').val()) {
+            //         isValid = false;
+            //         $('#newCustomerName').focus();
+            //     }
+            //     if (!$('#newCustomerPhone').val()) {
+            //         isValid = false;
+            //         $('#newCustomerPhone').focus();
+            //     }
+            // }
+
+            if (selectedBikes.length == 0) {
+                alert('Vui lòng chọn ít nhất 1 xe');
+                return;
+            }
+
+            // Cập nhật trường ẩn với danh sách xe đã chọn
+            $('#selectedBikeIds').val(JSON.stringify(selectedBikes));
+
+            // Lấy dữ liệu từ form
+            var billData = $(this).serialize();
+
+            $.ajax({
+                url: '@Url.Action("Create", "Bill")',
+                type: 'POST',
+                data: billData,
+                success: function (response) {
+                    if (response.success) {
+                        $('#messageContainer').html('<div class="alert alert-success">' + response.message + '</div>');
+                    } else {
+                        $('#messageContainer').html('<div class="alert alert-danger">' + response.message + '</div>');
+                    }
+                },
+                error: function () {
+                    $('#messageContainer').html('<div class="alert alert-danger">Có lỗi xảy ra, vui lòng thử lại sau.</div>');
+                }
+            });
+        });
     });
-
-
 </script>

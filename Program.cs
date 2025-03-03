@@ -3,6 +3,7 @@ using NMCNPM_Nhom3.Models.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddHttpContextAccessor();
 //CookieAuthentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
