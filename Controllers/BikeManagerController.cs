@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using NMCNPM_Nhom3.Models.Entities;
+using NMCNPM_Nhom3.Services;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace NMCNPM_Nhom3.Controllers
         public async Task<IActionResult> Index()
         {
             TempData.Clear();
-            var bikes = await _context.TblBikes.Include(b => b.FkIdBikeDetailNavigation).ToListAsync();
+            var bikes = await _context.TblBikes.Where(b => b.SStatus != "Đã xóa").Include(b => b.FkIdBikeDetailNavigation).ToListAsync();
             return View(bikes);
         }
         
@@ -93,7 +94,7 @@ namespace NMCNPM_Nhom3.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditBike(int id, TblBike bike)
+        public async Task<IActionResult> EditBike(int id, TblBike bike, IFormFile? ImageFile)
         {
             if (id != bike.PkIdBike)
             {
@@ -104,6 +105,24 @@ namespace NMCNPM_Nhom3.Controllers
             {
                 try
                 {
+                    
+                    if (ImageFile != null)
+                    {
+                        // Đường dẫn thư mục lưu ảnh
+                        string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/assets/resources");
+
+                        // Kiểm tra và xóa ảnh cũ nếu có
+                        if (!string.IsNullOrEmpty(bike.SImage))
+                        {
+                            string oldFilePath = Path.Combine(uploadsFolder, bike.SImage);
+                            if (System.IO.File.Exists(oldFilePath))
+                            {
+                                System.IO.File.Delete(oldFilePath); // Xóa ảnh cũ
+                            }
+                        }
+                        bike.SImage = await Util.SaveImage(ImageFile);
+                    }
+
                     _context.Update(bike);
                     await _context.SaveChangesAsync();
                     var bike1 = await _context.TblBikes
@@ -121,6 +140,10 @@ namespace NMCNPM_Nhom3.Controllers
                     TempData["ErrorMessage"] = "Lỗi khi cập nhật dữ liệu!";
                 }
 
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Thông tin không hợp lệ!";
             }
 
             // Nếu có lỗi, load lại danh sách chi tiết xe
@@ -144,36 +167,7 @@ namespace NMCNPM_Nhom3.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Đường dẫn thư mục lưu ảnh
-                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/assests/resources");
-
-                // Tạo tên file gốc
-                string fileName = Path.GetFileNameWithoutExtension(ImageFile.FileName);
-                string extension = Path.GetExtension(ImageFile.FileName);
-                string uniqueFileName = fileName + extension;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                // Kiểm tra nếu file đã tồn tại, thêm (1), (2),...
-                int count = 1;
-                while (System.IO.File.Exists(filePath))
-                {
-                    uniqueFileName = $"{fileName}({count}){extension}";
-                    filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    count++;
-                }
-
-                // Tạo thư mục nếu chưa tồn tại
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
-
-                // Lưu file vào thư mục
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await ImageFile.CopyToAsync(fileStream);
-                }
-                bike.SImage =  uniqueFileName;
+                bike.SImage = await Util.SaveImage(ImageFile);
                 _context.TblBikes.Add(bike);
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Thêm mới xe đạp thành công!";
@@ -191,8 +185,7 @@ namespace NMCNPM_Nhom3.Controllers
                 }
                 TempData["ErrorMessage"] = "Thêm mới xe đạp thất bại! Vui lòng kiểm tra lại dữ liệu." + s;
             }
-            
-            
+
             return View(bike);
         }
 

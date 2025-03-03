@@ -39,23 +39,26 @@
                             <label class="form-label fw-bold">Chi tiết xe</label>
                             <div class="input-group">
                                 <input type="text" id="selectedBikeDetail" class="form-control" readonly>
-                                <input type="hidden" asp-for="FkIdBikeDetail" id="FkIdBikeDetail">
+                                <input type="hidden" asp-for="FkIdBikeDetail" id="FkIdBikeDetail" value="" required>
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bikeDetailModal">
                                     Chọn chi tiết xe
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Tình trạng -->
-                        <div class="mb-3">
-                            <label asp-for="SCondition" class="form-label fw-bold">Tình trạng</label>
-                            <input asp-for="SCondition" class="form-control" placeholder="Nhập tình trạng xe" required />
-                        </div>
-
                         <!-- Trạng thái -->
                         <div class="mb-3">
-                            <label asp-for="SStatus" class="form-label fw-bold">Trạng thái</label>
-                            <input asp-for="SStatus" class="form-control" placeholder="Nhập trạng thái xe" required />
+                            <label asp-for="SCondition" class="form-label fw-bold">Trạng thái</label>
+                            <select asp-for="SCondition" class="form-control">
+                                <option value="Chưa thuê">Chưa thuê</option>
+                                <option value="Đã thuê">Đã thuê</option>
+                            </select>
+                        </div>
+
+                        <!-- Tình Trạng -->
+                        <div class="mb-3">
+                            <label asp-for="SStatus" class="form-label fw-bold">Tình trạng</label>
+                            <input asp-for="SStatus" class="form-control" placeholder="Nhập tình trạng xe" required />
                         </div>
 
                         <!-- Giá thuê -->
@@ -75,7 +78,7 @@
                         <!-- Hình ảnh -->
                         <div class="mb-3">
                             <label for="ImageFile" class="form-label fw-bold">Hình ảnh</label>
-                            <input type="file" class="form-control" id="ImageFile" name="ImageFile" accept="image/*" />
+                            <input type="file" class="form-control" id="ImageFile" name="ImageFile" accept="image/*" required/>
                         </div>
 
 
@@ -175,6 +178,7 @@
     });
 
     function selectBikeDetail(bikeId) {
+
         let row = $("#bikeDetailTable tr").filter(function () {
             return $(this).find("td:first").text().trim() == bikeId;
         });

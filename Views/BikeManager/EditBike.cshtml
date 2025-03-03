@@ -26,7 +26,7 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-body">
-                    <form asp-action="EditBike" method="post">
+                    <form asp-action="EditBike" method="post" enctype="multipart/form-data">
                         <input type="hidden" asp-for="PkIdBike" />
 
                         <!-- Tên xe -->
@@ -47,15 +47,18 @@
                             </div>
                         </div>
 
-                        <!-- Tình trạng -->
-                        <div class="mb-3">
-                            <label asp-for="SCondition" class="form-label fw-bold">Tình trạng</label>
-                            <input asp-for="SCondition" class="form-control" placeholder="Nhập tình trạng xe" />
-                        </div>
-
                         <!-- Trạng thái -->
                         <div class="mb-3">
-                            <label asp-for="SStatus" class="form-label fw-bold">Trạng thái</label>
+                            <label asp-for="SCondition" class="form-label fw-bold">Trạng thái</label>
+                            <select asp-for="SCondition" class="form-control">
+                                <option value="Chưa thuê">Chưa thuê</option>
+                                <option value="Đã thuê">Đã thuê</option>
+                            </select>
+                        </div>
+
+                        <!-- Tình trạng -->
+                        <div class="mb-3">
+                            <label asp-for="SStatus" class="form-label fw-bold">Tình trạng</label>
                             <input asp-for="SStatus" class="form-control" placeholder="Nhập trạng thái xe" />
                         </div>
 
@@ -71,12 +74,12 @@
                             <input asp-for="FDeposit" type="number" step="0.1" class="form-control" placeholder="Nhập số tiền đặt cọc" />
                         </div>
 
+                        <input asp-for="SImage" class="form-control" type="hidden"/>
                         <!-- Hình ảnh -->
                         <div class="mb-3">
-                            <label asp-for="SImage" class="form-label fw-bold">Hình ảnh</label>
-                            <input asp-for="SImage" class="form-control" placeholder="Nhập đường dẫn hình ảnh" />
+                            <label for="ImageFile" class="form-label fw-bold">Hình ảnh</label>
+                            <input type="file" class="form-control" id="ImageFile" name="ImageFile" accept="image/*" />
                         </div>
-                        
                         <hr>
 
                         <!-- Nút Lưu -->
