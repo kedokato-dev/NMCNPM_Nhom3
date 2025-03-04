@@ -48,10 +48,11 @@
 			<div class="card shadow">
 				<div class="card-body">
 					<!-- Form gửi dữ liệu qua POST -->
-					<form asp-action="Edit" method="post">
+					<form asp-action="BillInfo" method="post">
 						<!-- Mã hóa đơn -->
 						<div class="mb-3">
 							<label class="form-label fw-bold">Mã hóa đơn</label>
+							<input type="text" class="d-none" name="id" asp-for="@Model.PkBillCode" readonly/>
 							<input type="text" class="form-control disabled-field" value="@Model.PkBillCode" readonly />
 						</div>
 
@@ -69,21 +70,24 @@
 						<!-- Thời gian bắt đầu -->
 						<div class="mb-3">
 							<label class="form-label fw-bold">Thời gian bắt đầu</label>
-							<input type="datetime-local" class="form-control" name="DBeginTime" value="@Model.DBeginTime.ToString("yyyy-MM-ddTHH:mm")" />
+							<input type="datetime-local" class="form-control" name="DBeginTime" value="@Model.DBeginTime.ToString("yyyy-MM-ddTHH:mm")" readonly/>
 						</div>
 
 						<!-- Thời gian kết thúc -->
 						<div class="mb-3">
 							<label class="form-label fw-bold">Thời gian kết thúc</label>
-							<input type="datetime-local" class="form-control" name="DEndTime" value="@Model.DEndTime.ToString("yyyy-MM-ddTHH:mm")" />
+							<input type="datetime-local" class="form-control" name="DEndTime" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" readonly />
 						</div>
 
 						<!-- Chi phí phát sinh -->
 						<div class="mb-3">
 							<label class="form-label fw-bold">Phí phát sinh</label>
-							<input type="text" class="form-control" name="FIncidentalCosts" value="@Model.FIncidentalCosts" />
+							<input type="number" class="form-control" name="FIncidentalCosts" value="0" min="0"/>
 						</div>
-
+						<div class="mb-3">
+							<label class="form-label fw-bold">Tiền đã cọc</label>
+							<input type="text" class="form-control" name="FDeposit" value="@ViewBag.totalDeposit" readonly/>
+						</div>
 						<div class="mb-3">
 							<label class="form-label fw-bold">Danh sách xe</label>
 							<table class="table">
@@ -110,16 +114,6 @@
 							</table>
 						</div>
 
-						<!-- Trạng thái thanh toán -->
-						<div class="mb-3">
-							<label class="form-label fw-bold">Trạng thái</label>
-							<span style="font-size: 0.8em; color: red;">*</span>
-							<select class="form-select" name="PaymentStatus">
-								<option value="0" selected="@(Model.IStatus == 0 ? "selected" : null)">Trống</option>
-								<option value="1" selected="@(Model.IStatus == 1 ? "selected" : null)">Đang được thuê</option>
-							</select>
-						</div>
-
 						<hr>
 
 						<input type="hidden" asp-for="PkBillCode" />
@@ -128,7 +122,7 @@
 
 
 						<!-- Nút Cập nhật -->
-						<button type="submit" class="btn btn-primary w-100 mt-5">Cập nhật</button>
+						<button type="submit" class="btn btn-primary w-100 mt-5">Thanh toán</button>
 					</form>
 				</div>
 			</div>

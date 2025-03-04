@@ -43,7 +43,7 @@ namespace NMCNPM_Nhom3.Controllers
         {
             if (string.IsNullOrEmpty(customerIdCard) || !Regex.IsMatch(customerIdCard, @"^\d{12}$"))
             {
-                return Json(new { success = false, message = "Số CCCD không hợp lệ." });
+                return Json(new { success = false, message = "Số CCCD không hợp lệ.", exist = false });
             }
 
             var customer = await _context.TblAccounts
@@ -51,6 +51,11 @@ namespace NMCNPM_Nhom3.Controllers
 
             if (customer != null)
             {
+                var checkExist = await _context.TblCreateBills.Include(b => b.FkIdUserNavigation).FirstOrDefaultAsync(b => b.FkIdUserNavigation.SUserIdentification == customerIdCard);
+                if(checkExist != null)
+                {
+                    return Json(new {success = false,exist = true, message = "Khách hàng đang thuê hóa đơn khác!"});
+                }
                 return Json(new
                 {
                     success = true,
@@ -60,7 +65,7 @@ namespace NMCNPM_Nhom3.Controllers
             }
             else
             {
-                return Json(new { success = false, message = "Khách hàng chưa có trong hệ thống." });
+                return Json(new { success = false, message = "Khách hàng chưa có trong hệ thống.", exist = false });
             }
         }
 
@@ -110,23 +115,24 @@ namespace NMCNPM_Nhom3.Controllers
 
             if (bike != null)
             {
-                if (bike.SCondition == "Đã thuê")
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        message = "Xe đã được thuê",
-                        bikeStatus = bike.SCondition
-                    });
-                }
+                //if (bike.SCondition == "Đã thuê")
+                //{
+                //    return Json(new
+                //    {
+                //        success = false,
+                //        message = "Đã thuê",
+                //        bikeStatus = bike.SCondition
+                //    });
+                //}
 
                 return Json(new
                 {
                     success = true,
                     bikeName = bike.SName,
-                    bikeCondition = bike.SCondition,
-                    bikeStatus = bike.SStatus,
+                    bikeCondition = bike.SStatus,
+                    bikeStatus = bike.SCondition,
                     bikeRentalPrice = bike.FRentalPrice,
+                    bikeDepositPrice = bike.FDeposit
 
                 });
             }
@@ -207,6 +213,12 @@ namespace NMCNPM_Nhom3.Controllers
                     // Lưu chi tiết hóa đơn (danh sách xe được thuê)
                     foreach (var bikeId in bikeIds)
                     {
+                        var bk = await _context.TblBikes.FirstOrDefaultAsync(b => b.PkIdBike == bikeId);
+                        if(bk != null)
+                        {
+                            bk.SCondition = "Đã thuê";
+							_context.Update(bk);
+						}
                         var billDetail = new TblBillDetail
                         {
                             FkIdBill = bill.PkBillCode,
@@ -299,6 +311,12 @@ namespace NMCNPM_Nhom3.Controllers
 
             // Lấy thông tin xe
             var bikeList = bill.TblBillDetails.Select(bd => bd.FkIdBikeNavigation).ToList();
+            double totalDeposit = 0;
+            foreach(var x in bikeList)
+            {
+                totalDeposit += x.FDeposit;
+            }
+            ViewBag.totalDeposit = totalDeposit;
             ViewBag.BikeList = bikeList;
 
             return View(bill);
@@ -399,6 +417,51 @@ namespace NMCNPM_Nhom3.Controllers
         private bool BillExists(int id)
         {
             return _context.TblBills.Any(e => e.PkBillCode == id);
+        }
+        [HttpPost]
+        public async Task<IActionResult> BillInfo(int id)
+        {
+            var billCreate = await _context.TblCreateBills.FirstOrDefaultAsync(b => b.FkBillCode == id);
+            var bill = await _context.TblBills.FirstOrDefaultAsync(b => b.PkBillCode == id);
+            var listBikeID = _context.TblBillDetails.Where(b => b.FkIdBill == id).ToList();
+
+            if (bill == null || billCreate == null || listBikeID == null || listBikeID.Count == 0 || bill.IStatus == 0)
+            {
+                ViewBag.error = "Lỗi";
+                return View();
+            }
+            double totalRental = 0;
+			double totalDeposit = 0;
+            bill.DEndTime = DateTime.Now;
+            TimeSpan duration = DateTime.Now - bill.DBeginTime;
+            List<TblBike> bikes = new List<TblBike>();
+            double hours = duration.TotalHours;
+            foreach(var x in listBikeID)
+            {
+                var bike = await _context.TblBikes.FirstOrDefaultAsync(b => b.PkIdBike == x.FkIdBike);
+                if(bike != null)
+                {
+                    bike.SCondition = "Chưa thuê";
+                    bikes.Add(bike);
+                    totalDeposit += bike.FDeposit;
+                    totalRental += hours * bike.FRentalPrice;
+                }
+
+            }
+
+            var staff = await _context.TblAccounts.FirstOrDefaultAsync(a => a.PkIdUser == billCreate.FkIdUser && a.FkIdPermission == 1);
+            var customer = await _context.TblAccounts.FirstOrDefaultAsync(a => a.PkIdUser == billCreate.FkIdUser && a.FkIdPermission == 2);
+
+            ViewBag.totalRental = totalRental;
+            ViewBag.totalDeposit = totalDeposit;
+            ViewBag.nameStaff = staff?.SAccountName ?? "Nhân viên";
+            ViewBag.nameCustomer = customer?.SAccountName ?? "Khách hàng";
+            ViewBag.bikes = bikes;
+            ViewBag.dEnd = bill.DEndTime;
+            ViewBag.dStart = bill.DBeginTime;
+            ViewBag.hours = hours;
+
+            return View();
         }
     }
 }
