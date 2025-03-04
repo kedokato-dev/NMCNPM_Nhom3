@@ -2,73 +2,85 @@
 @{
     ViewData["Title"] = "Hóa đơn";
     int cnt = 0;
-    double total = 0.0;
+    double total = ViewBag?.fIncidentalCosts??0.0;
 }
-
-<div class="container mt-5">
-    <div class="card shadow-lg">
-        <div id="print">
-        <div class="card-header bg-primary text-white text-center">
-            <h4 class="mb-0">Chi Tiết Hóa Đơn</h4>
-        </div>
-
-        <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Nhân viên:</strong> @ViewBag.nameStaff</p>
-                        <p><strong>Khách hàng:</strong> @ViewBag.nameCustomer</p>
-                        <p><strong>Ngày bắt đầu:</strong> @ViewBag.dStart.ToString("HH:mm:ss dd/MM/yyyy")</p>
-                        <p><strong>Ngày kết thúc:</strong> @ViewBag.dEnd.ToString("HH:mm:ss dd/MM/yyyy")</p>
-                        <p><strong>Số giờ thuê:</strong> @ViewBag.hours.ToString("N0") giờ</p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Tiền cọc:</strong> @ViewBag.totalRental.ToString("N0")đ</p>
-                        <p><strong>Tổng tiền thuê:</strong> @ViewBag.totalDeposit.ToString("N0")đ</p>
-                    </div>
+@if(ViewBag?.error?? null == null)
+{
+    <div class="container mt-5">
+        <div class="card shadow-lg">
+            <div id="print">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">Chi Tiết Hóa Đơn</h4>
                 </div>
 
-                <h5 class="mt-4">Danh sách xe thuê</h5>
-                <table class="table table-striped" id="myTable">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>#</th>
-                            <th>Tên xe</th>
-                            <th>Giá thuê/giờ</th>
-                            <th>Giá cọc</th>
-                            <th>Thành tiền</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (NMCNPM_Nhom3.Models.Entities.TblBike x in ViewBag.bikes) //(List<NMCNPM_Nhom3.Models.Entities.TblBike>)
-                        {
-                            cnt++;
-                            double tt = x.FRentalPrice * ViewBag.hours - x.FDeposit;
-                            total += tt;
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Nhân viên:</strong> @ViewBag?.nameStaff</p>
+                            <p><strong>Khách hàng:</strong> @ViewBag?.nameCustomer</p>
+                            <p><strong>Ngày bắt đầu:</strong> @ViewBag?.dStart.ToString("HH:mm:ss dd/MM/yyyy")</p>
+                            <p><strong>Ngày kết thúc:</strong> @ViewBag?.dEnd.ToString("HH:mm:ss dd/MM/yyyy")</p>
+                            <p><strong>Số giờ thuê:</strong> @ViewBag?.hours giờ</p>
+                        </div>
+
+                    </div>
+
+                    <h5 class="mt-4">Danh sách xe thuê</h5>
+                    <table class="table table-striped" id="myTable">
+                        <thead class="table-dark">
                             <tr>
-                               <td>@cnt</td>
-                               <td>@x.SName</td>
-                               <td>@x.FRentalPrice</td>
-                               <td>@x.FDeposit</td>
-                               <td>@tt.ToString("N0" )đ</td>
-                           </tr>
-                        }
-                        <tr>
-                            <td>Tổng tiền</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>@total.ToString("N0")đ</td>
-                        </tr>
-                    </tbody>
-                </table>
-            <div class="text-end">
-                <a class="btn btn-secondary" asp-action="Index">Quay lại</a>
-                <button class="btn btn-primary" onclick="printTable()">In hóa đơn</button>
+                                <th>#</th>
+                                <th>Tên xe</th>
+                                <th>Giá thuê/giờ</th>
+                                <th>Giá cọc</th>
+                                <th>Tiền thuê</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (NMCNPM_Nhom3.Models.Entities.TblBike x in ViewBag.bikes) //(List<NMCNPM_Nhom3.Models.Entities.TblBike>)
+                            {
+                                cnt++;
+                                double tt = x.FRentalPrice * ViewBag?.hours ?? 0 - x.FDeposit;
+                                total += tt;
+                                <tr>
+                                    @{
+                                        double tienthue = x.FRentalPrice * ViewBag?.hours ?? 0;
+                                    }
+                                    <td>@cnt</td>
+                                    <td>@x.SName</td>
+                                    <td>@x.FRentalPrice</td>
+                                    <td>@x.FDeposit</td>
+                                    <td>@tienthue.ToString("N0")</td>
+                                    <td>@tt.ToString("N0")đ</td>
+                                </tr>
+                            }
+                            <tr>
+                                <td>Tổng tiền</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>@total.ToString("N0")đ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-md-6">
+                        <p><strong>Tổng tiền thuê:</strong> @ViewBag?.totalRental.ToString("N0") đ</p>
+                        <p><strong>Tiền đã cọc:</strong> @ViewBag?.totalDeposit.ToString("N0") đ</p>
+                        <p><strong>Chi phí phát sinh:</strong> @ViewBag?.fIncidentalCosts.ToString("N0") đ</p>
+
+                    </div>
+                    <div class="text-end">
+                        <a class="btn btn-secondary" asp-action="Index">Quay lại</a>
+                        <button class="btn btn-primary" onclick="printTable()">In hóa đơn</button>
+                    </div>
+                </div>
             </div>
         </div>
-        </div>
     </div>
-</div>
+}
+
 <script>
     function printTable() {
     // Lấy nội dung của phần cần in

@@ -412,7 +412,7 @@
 		return;
 	}
 
-		var startTime = '@ViewBag.StartTime';
+		var startTime = '@DateTime.Now';
 		var totalDeposit = 0;
 		document.querySelectorAll("td.dps").forEach( td =>{
 			totalDeposit += parseFloat(td.textContent) || 0;

@@ -18,7 +18,7 @@
             <th>Thời gian bắt đầu</th>
             <th>Thời gian kết thúc</th>
             @* <th>Phí phát sinh</th> *@
-            <th>Trạng thái thuê</th>
+            <th>Trạng thái</th>
             <th>Hành động</th>
         </tr>
         </thead>
@@ -30,7 +30,7 @@
                 <td>@bill.DBeginTime.ToString("dd/MM/yyyy HH:mm")</td>
                 <td class="@(bill.IStatus == 0 ? "disabled-field" : "")">@bill.DEndTime.ToString("dd/MM/yyyy HH:mm")</td>
                 @* <td>@bill.FIncidentalCosts</td> *@
-                <td>@(bill.IStatus.HasValue && bill.IStatus.Value == 1 ? "Đang được thuê" : "Đang trống")</td>
+                <td>@(bill.IStatus.HasValue && bill.IStatus.Value == 1 ? "Chưa thanh toán" : "Đã thanh toán")</td>
                 <td>
                     <a href="@Url.Action("Edit", new { id = bill.PkBillCode })" class="btn btn-warning">Xem chi tiết / Cập nhật</a>
                 </td>

@@ -51,8 +51,13 @@ namespace NMCNPM_Nhom3.Controllers
 
             if (customer != null)
             {
-                var checkExist = await _context.TblCreateBills.Include(b => b.FkIdUserNavigation).FirstOrDefaultAsync(b => b.FkIdUserNavigation.SUserIdentification == customerIdCard);
-                if(checkExist != null)
+                var checkExist = await _context.TblCreateBills
+    .Include(b => b.FkIdUserNavigation)
+    .Include(b => b.FkBillCodeNavigation) // Thêm Include để tránh lỗi truy cập null
+    .FirstOrDefaultAsync(b =>
+        b.FkIdUserNavigation.SUserIdentification == customerIdCard &&
+        b.FkBillCodeNavigation.IStatus == 1);
+                if (checkExist != null)
                 {
                     return Json(new {success = false,exist = true, message = "Khách hàng đang thuê hóa đơn khác!"});
                 }
@@ -430,12 +435,21 @@ namespace NMCNPM_Nhom3.Controllers
                 ViewBag.error = "Lỗi";
                 return View();
             }
+            bill.IStatus = 0;
+            _context.Update(bill);
+            await _context.SaveChangesAsync();
+
             double totalRental = 0;
 			double totalDeposit = 0;
             bill.DEndTime = DateTime.Now;
             TimeSpan duration = DateTime.Now - bill.DBeginTime;
             List<TblBike> bikes = new List<TblBike>();
-            double hours = duration.TotalHours;
+            int hours = (int)duration.TotalMinutes/ 60;
+            if((int)duration.TotalMinutes%60 >= 10)
+            {
+                hours++;
+            }
+            if (duration.TotalMinutes < 10) hours = 0;
             foreach(var x in listBikeID)
             {
                 var bike = await _context.TblBikes.FirstOrDefaultAsync(b => b.PkIdBike == x.FkIdBike);
@@ -443,11 +457,13 @@ namespace NMCNPM_Nhom3.Controllers
                 {
                     bike.SCondition = "Chưa thuê";
                     bikes.Add(bike);
+                    _context.Update(bike);
                     totalDeposit += bike.FDeposit;
                     totalRental += hours * bike.FRentalPrice;
                 }
 
             }
+            await _context.SaveChangesAsync();
 
             var staff = await _context.TblAccounts.FirstOrDefaultAsync(a => a.PkIdUser == billCreate.FkIdUser && a.FkIdPermission == 1);
             var customer = await _context.TblAccounts.FirstOrDefaultAsync(a => a.PkIdUser == billCreate.FkIdUser && a.FkIdPermission == 2);
@@ -460,7 +476,7 @@ namespace NMCNPM_Nhom3.Controllers
             ViewBag.dEnd = bill.DEndTime;
             ViewBag.dStart = bill.DBeginTime;
             ViewBag.hours = hours;
-
+            ViewBag.fIncidentalCosts = bill.FIncidentalCosts??0;
             return View();
         }
     }
