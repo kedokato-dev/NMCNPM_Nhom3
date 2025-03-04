@@ -1,4 +1,4 @@
-@model IEnumerable<NMCNPM_Nhom3.Models.Entities.TblBill>
+@model IEnumerable<NMCNPM_Nhom3.Models.Entities.ViewInvoice>
 
 @{
     ViewData["Title"] = "Hóa đơn chưa thanh toán";
@@ -15,10 +15,9 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>Tên khách hàng</th>
             <th>Thời gian bắt đầu</th>
-            <th>Thời gian kết thúc</th>
-            @* <th>Phí phát sinh</th> *@
-            <th>Trạng thái</th>
+            <th>Tiền cọc</th>
             <th>Hành động</th>
         </tr>
         </thead>
@@ -26,13 +25,13 @@
         @foreach (var bill in Model)
         {
             <tr>
-                <td>@bill.PkBillCode</td>
-                <td>@bill.DBeginTime.ToString("dd/MM/yyyy HH:mm")</td>
-                <td class="@(bill.IStatus == 0 ? "disabled-field" : "")">@bill.DEndTime.ToString("dd/MM/yyyy HH:mm")</td>
-                @* <td>@bill.FIncidentalCosts</td> *@
-                <td>@(bill.IStatus.HasValue && bill.IStatus.Value == 1 ? "Chưa thanh toán" : "Đã thanh toán")</td>
+                <td>@bill.InvoiceID</td>
+                    <td>@bill.CustomerName</td>
+                <td>@bill.TimeBegin.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@bill.TotalDeposit.ToString("N0")</td>
+                
                 <td>
-                    <a href="@Url.Action("Edit", new { id = bill.PkBillCode })" class="btn btn-warning">Xem chi tiết / Cập nhật</a>
+                    <a href="@Url.Action("Edit", new { id = bill.InvoiceID })" class="btn btn-warning">Xem chi tiết / Cập nhật</a>
                 </td>
             </tr>
         }

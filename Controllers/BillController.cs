@@ -29,8 +29,21 @@ namespace NMCNPM_Nhom3.Controllers
         {
             var bills = await _context.TblBills
                 .Include(b => b.TblBillDetails)
-                .ThenInclude(bd => bd.FkIdBikeNavigation)
-                .Where(b => b.IStatus.HasValue && b.IStatus.Value == 1) // Chỉ lấy hóa đơn đang thuê
+                    .ThenInclude(bd => bd.FkIdBikeNavigation)
+                .Include(b => b.TblCreateBills)
+                    .ThenInclude(cb => cb.FkIdUserNavigation)
+                .Where(b => b.IStatus.HasValue && b.IStatus.Value == 1)
+                .Select(b => new ViewInvoice
+                {
+                    InvoiceID = b.PkBillCode,
+                    CustomerName = b.TblCreateBills
+                        .Where(cb => cb.FkIdUserNavigation.FkIdPermission == 2)
+                        .Select(cb => cb.FkIdUserNavigation.SAccountName)
+                        .FirstOrDefault() ?? "Khách hàng không xác định",
+                    TimeBegin = b.DBeginTime,
+                    TotalDeposit = b.TblBillDetails.Sum(bd => bd.FkIdBikeNavigation.FDeposit)
+                })
+
                 .ToListAsync();
             return View(bills);
         }
