@@ -46,13 +46,13 @@
 
 ## ⬇️ 1. Clone repo:
    ```sh
-    git clone https://github.com/kedekato-dev/NMCNPM_Nhom3. git
+    git clone https://github.com/kedekato-dev/NMCNPM_Nhom3.git
     cd NMCNPM_Nhom3
 ```
 
 ## 🛢️2. Thiết lập CSDL
    ```sh
-    Truy cập www.root -> script --> copy toàn bộ code
+    Truy cập ScriptSQL -> DB04032025.sql --> copy toàn bộ code
     Mở SQL Server paste đoạn code SQL Server vào rồi chạy để tạo Database
 ```
 ## 🔗 3. Cấu hình chuỗi kết nối
@@ -72,9 +72,9 @@
 ```
 - **Đổi Name_Host thành địa chỉ của SQL Server mà ứng dụng sẽ kết nối tới.**
 
-    Ví dụ Name_Host của mình là : **Data Source = QuanDepZai\SQLEXPRESS**
+    Ví dụ Name_Host của mình là : **Data Source = QuanDepZai\\\SQLEXPRESS**
 
-    Một số máy thì Name_Host có thể là: **Data Source = .**
+    Một số máy thì Name_Host có thể là: **Data Source = .\\\\SQLEXPRESS**
 
 ## ⛏️ 4. Cài đặt thư viện Entity Framework (EF) trong ASP.NET Core
 
