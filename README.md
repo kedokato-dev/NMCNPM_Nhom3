@@ -56,6 +56,7 @@
     Mở SQL Server paste đoạn code SQL Server vào rồi chạy để tạo Database
 ```
 ## 🔗 3. Cấu hình chuỗi kết nối
+**Mở appsettings.json thay đổi chuỗi kết nối**
 ```sh
     {
     "Logging": {
@@ -76,6 +77,8 @@
 
     Một số máy thì Name_Host có thể là: **Data Source = .\\\\SQLEXPRESS**
 
+**Mở class NmcnpmContext.cs rồi cũng thay đổi chuỗi kết nối tượng tự như trên là hoàn thành thao tác thay đổi chuỗi kết nối.**
+
 ## ⛏️ 4. Cài đặt thư viện Entity Framework (EF) trong ASP.NET Core
 
 **Cài đặt qua Nucget Package Console**
@@ -92,6 +95,8 @@
 - Microsoft.EntityFrameworkCore.SqlServer
 
 - Microsoft.EntityFrameworkCore.Tools
+
+**Lưu ý chọn version tương thích cho phiên bản ASP.NET CORE mà bạn đang dùng**
 
 ## ☕️ 5. Tận hưởng thành quả 
 ```sh
