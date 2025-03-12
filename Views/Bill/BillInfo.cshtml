@@ -42,10 +42,11 @@
                             {
                                 cnt++;
                                 double tt = x.FRentalPrice * ViewBag?.hours ?? 0 - x.FDeposit;
-                                total += tt;
                                 <tr>
                                     @{
                                         double tienthue = x.FRentalPrice * ViewBag?.hours ?? 0;
+                                        tt = tienthue - x.FDeposit;
+                                        total += tt;
                                     }
                                     <td>@cnt</td>
                                     <td>@x.SName</td>
@@ -55,20 +56,13 @@
                                     <td>@tt.ToString("N0")đ</td>
                                 </tr>
                             }
-                            <tr>
-                                <td>Tổng tiền</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>@total.ToString("N0")đ</td>
-                            </tr>
                         </tbody>
                     </table>
                     <div class="col-md-6">
                         <p><strong>Tổng tiền thuê:</strong> @ViewBag?.totalRental.ToString("N0") đ</p>
                         <p><strong>Tiền đã cọc:</strong> @ViewBag?.totalDeposit.ToString("N0") đ</p>
                         <p><strong>Chi phí phát sinh:</strong> @ViewBag?.fIncidentalCosts.ToString("N0") đ</p>
+                        <p><strong>Thành tiền:</strong> @total.ToString("N0")đ đ</p>
 
                     </div>
                     <div class="text-end">

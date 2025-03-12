@@ -439,11 +439,12 @@ namespace NMCNPM_Nhom3.Controllers
         [HttpPost]
         public async Task<IActionResult> BillInfo(int id)
         {
-            var billCreate = await _context.TblCreateBills.FirstOrDefaultAsync(b => b.FkBillCode == id);
+            var billCreateStaff = await _context.TblCreateBills.Include(c => c.FkIdUserNavigation).FirstOrDefaultAsync(b => b.FkBillCode == id && b.FkIdUserNavigation.FkIdPermission == 1);
+            var billCreateCus = await _context.TblCreateBills.Include(c => c.FkIdUserNavigation).FirstOrDefaultAsync(b => b.FkBillCode == id && b.FkIdUserNavigation.FkIdPermission == 2);
             var bill = await _context.TblBills.FirstOrDefaultAsync(b => b.PkBillCode == id);
             var listBikeID = _context.TblBillDetails.Where(b => b.FkIdBill == id).ToList();
 
-            if (bill == null || billCreate == null || listBikeID == null || listBikeID.Count == 0 || bill.IStatus == 0)
+            if (bill == null || billCreateStaff == null || listBikeID == null || listBikeID.Count == 0 || bill.IStatus == 0)
             {
                 ViewBag.error = "Lỗi";
                 return View();
@@ -462,7 +463,7 @@ namespace NMCNPM_Nhom3.Controllers
             {
                 hours++;
             }
-            if (duration.TotalMinutes < 10) hours = 0;
+            if (duration.TotalMinutes < 10) hours = 1;
             foreach(var x in listBikeID)
             {
                 var bike = await _context.TblBikes.FirstOrDefaultAsync(b => b.PkIdBike == x.FkIdBike);
@@ -478,8 +479,8 @@ namespace NMCNPM_Nhom3.Controllers
             }
             await _context.SaveChangesAsync();
 
-            var staff = await _context.TblAccounts.FirstOrDefaultAsync(a => a.PkIdUser == billCreate.FkIdUser && a.FkIdPermission == 1);
-            var customer = await _context.TblAccounts.FirstOrDefaultAsync(a => a.PkIdUser == billCreate.FkIdUser && a.FkIdPermission == 2);
+            var staff = await _context.TblAccounts.FirstOrDefaultAsync(a => a.PkIdUser == billCreateStaff.FkIdUser && a.FkIdPermission == 1);
+            var customer = await _context.TblAccounts.FirstOrDefaultAsync(a => a.PkIdUser == billCreateCus.FkIdUser && a.FkIdPermission == 2);
 
             ViewBag.totalRental = totalRental;
             ViewBag.totalDeposit = totalDeposit;
