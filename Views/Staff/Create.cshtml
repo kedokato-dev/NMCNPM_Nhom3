@@ -108,9 +108,9 @@
         $(document).ready(function () {
             function validatePhoneNumber() {
                 let phoneNumber = $("#SPhoneNumber").val().trim();
-                let phoneRegex = /^(0\d{9,10})$/;
+                let phoneRegex = /^(0\d{9})$/;
                 if (!phoneRegex.test(phoneNumber)) {
-                    $("#SPhoneNumberError").text("Số điện thoại phải có 10-11 chữ số và bắt đầu bằng số 0.");
+                    $("#SPhoneNumberError").text("Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0.");
                 } else {
                     $("#SPhoneNumberError").text("");
                 }
