@@ -32,7 +32,7 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-body">
-                    <form id="billForm" method="post" asp-action="Create">
+                    <form id="billForm" method="post" asp-action="Create" novalidate>
                         <!-- CCCD -->
                         <div class="mb-3">
                             <label for="customerIdCard" class="form-label fw-bold">Số CCCD</label>
@@ -76,10 +76,8 @@
                             <div class="mb-3">
                                 <label for="newCustomerPhone" class="form-label fw-bold">Số điện thoại</label>
                                 <input type="text" class="form-control" id="newCustomerPhone" name="newCustomerPhone"
-                                       pattern="[0-9]{10}"
                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                                        maxlength="10"
-                                       required
                                        title="Số điện thoại phải có đúng 10 chữ số" />
                                 <small class="text-danger d-none" id="phoneError">Số điện thoại phải có đúng 10 chữ số và chỉ chứa số!</small>
                             </div>
@@ -157,20 +155,17 @@
         var cccd = $(this).val().trim();
         var cccdError = $('#cccdError');
 
-        // Chỉ cho phép số và đúng 12 chữ số
         if (!/^[0-9]{12}$/.test(cccd)) {
             cccdError.removeClass('d-none');
             $('#customerInfo').addClass('d-none');
             $('#addCustomerForm').addClass('d-none');
         } else {
             cccdError.addClass('d-none');
-            // Gọi Ajax kiểm tra CCCD như code gốc của bạn
             $.ajax({
                 url: '@Url.Action("SearchCustomer", "Bill")',
                 type: 'GET',
                 data: { customerIdCard: cccd },
                 success: function (response) {
-                    // Giữ nguyên logic xử lý response như code gốc
                     if (response.success) {
                         $('#customerName').val(response.customerName);
                         $('#customerPhone').val(response.customerPhone);
@@ -179,7 +174,7 @@
                         $('#customerName').attr('required', true);
                         $('#customerPhone').attr('required', true);
                     } else {
-                        if(response.exist){
+                        if (response.exist) {
                             Swal.fire({
                                 title: "Lỗi!",
                                 text: "Khách hàng này đang thuê hóa đơn khác chưa thanh toán!",
@@ -190,8 +185,9 @@
                         } else {
                             $('#customerInfo').addClass('d-none');
                             $('#addCustomerForm').removeClass('d-none');
-                            $('#customerName').removeAttr('required');
-                            $('#customerPhone').removeAttr('required');
+                            // Add validation attributes when form is visible
+                            $('#newCustomerPhone').attr('required', true);
+                            $('#newCustomerPhone').attr('pattern', '[0-9]{10}');
                         }
                     }
                 }
@@ -201,42 +197,41 @@
 
         // Xử lý thêm khách hàng mới
         $('#addCustomerBtn').click(function () {
-            var customerIdCard = $('#customerIdCard').val().trim();
-            var customerName = $('#newCustomerName').val().trim();
-            var customerPhone = $('#newCustomerPhone').val().trim();
+        var customerIdCard = $('#customerIdCard').val().trim();
+        var customerName = $('#newCustomerName').val().trim();
+        var customerPhone = $('#newCustomerPhone').val().trim();
 
-            if (!customerName || !customerPhone) {
-                alert('Vui lòng nhập đầy đủ thông tin khách hàng.');
-                return;
-            }
+        if (!customerName || !customerPhone || !/^[0-9]{10}$/.test(customerPhone)) {
+            alert('Vui lòng nhập đầy đủ và đúng định dạng thông tin khách hàng.');
+            return;
+        }
 
-            $.ajax({
-                url: '@Url.Action("AddCustomer", "Bill")',
-                type: 'POST',
-                data: {
-                    customerIdCard: customerIdCard,
-                    customerName: customerName,
-                    customerPhone: customerPhone
-                },
-                success: function (response) {
-                    if (response.success) {
-                        // Cập nhật thông tin khách hàng vừa thêm
-                        $('#customerName').val(customerName);
-                        $('#customerPhone').val(customerPhone);
-                        $('#customerInfo').removeClass('d-none');
-                        $('#addCustomerForm').addClass('d-none');
-
-                        $('#customerName').attr('readonly', true);
-                        $('#customerPhone').attr('readonly', true);
-
-                        alert('Thêm khách hàng thành công!');
-                    } else {
-
-                        alert('Có lỗi xảy ra khi thêm khách hàng.');
-                    }
+        $.ajax({
+            url: '@Url.Action("AddCustomer", "Bill")',
+            type: 'POST',
+            data: {
+                customerIdCard: customerIdCard,
+                customerName: customerName,
+                customerPhone: customerPhone
+            },
+            success: function (response) {
+                if (response.success) {
+                    $('#customerName').val(customerName);
+                    $('#customerPhone').val(customerPhone);
+                    $('#customerInfo').removeClass('d-none');
+                    $('#addCustomerForm').addClass('d-none');
+                    // Remove validation attributes when hiding
+                    $('#newCustomerPhone').removeAttr('required');
+                    $('#newCustomerPhone').removeAttr('pattern');
+                    $('#customerName').attr('readonly', true);
+                    $('#customerPhone').attr('readonly', true);
+                    alert('Thêm khách hàng thành công!');
+                } else {
+                    alert('Có lỗi xảy ra khi thêm khách hàng.');
                 }
-            });
+            }
         });
+    });
 
         // Kiểm tra số điện thoại
         $('#customerPhone').on('input', function () {
@@ -359,36 +354,46 @@
 
 
             $('#billForm').submit(function (e) {
-        e.preventDefault();
+    e.preventDefault();
 
-        var cccd = $('#customerIdCard').val().trim();
-        var phone = $('#customerPhone').val().trim();
-        var isValid = true;
-        var errorMessage = '';
+    var cccd = $('#customerIdCard').val().trim();
+    var phone = $('#customerPhone').val().trim();
+    var newPhone = $('#newCustomerPhone').val().trim();
+    var isValid = true;
+    var errorMessage = '';
 
-        // Kiểm tra CCCD
-        if (!/^[0-9]{12}$/.test(cccd)) {
+    // Kiểm tra CCCD
+    if (!/^[0-9]{12}$/.test(cccd)) {
+        isValid = false;
+        errorMessage += 'CCCD phải có đúng 12 chữ số và chỉ chứa số.\n';
+        $('#cccdError').removeClass('d-none');
+    }
+
+    // Kiểm tra số điện thoại chính
+    if (!/^[0-9]{10}$/.test(phone)) {
+        isValid = false;
+        errorMessage += 'Số điện thoại phải có đúng 10 chữ số và chỉ chứa số.\n';
+        $('#phoneError').removeClass('d-none');
+    }
+
+    // Kiểm tra số điện thoại mới (nếu form thêm khách hàng đang hiển thị)
+    if (!$('#addCustomerForm').hasClass('d-none')) {
+        if (!/^[0-9]{10}$/.test(newPhone)) {
             isValid = false;
-            errorMessage += 'CCCD phải có đúng 12 chữ số và chỉ chứa số.\n';
-            $('#cccdError').removeClass('d-none');
-        }
-
-        // Kiểm tra số điện thoại
-        if (!/^[0-9]{10}$/.test(phone)) {
-            isValid = false;
-            errorMessage += 'Số điện thoại phải có đúng 10 chữ số và chỉ chứa số.\n';
+            errorMessage += 'Số điện thoại mới phải có đúng 10 chữ số và chỉ chứa số.\n';
             $('#phoneError').removeClass('d-none');
         }
+    }
 
-            if (selectedBikes.length === 0) {
+    if (selectedBikes.length === 0) {
         isValid = false;
         errorMessage += 'Vui lòng chọn ít nhất một xe.\n';
     }
 
-        if (!isValid) {
-            alert(errorMessage);
-            return;
-        }
+    if (!isValid) {
+        alert(errorMessage);
+        return;
+    }
 
         var startTime = '@DateTime.Now';
         var totalDeposit = 0;
@@ -398,6 +403,7 @@
 
         );
         var customerName = $('#customerName').val().trim();
+        var customerPhone = $('#customerPhone').val().trim();
         // Tạo nội dung popup
         var popupContent = `
             <h4>Thông tin hóa đơn</h4>
