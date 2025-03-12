@@ -34,7 +34,7 @@ namespace NMCNPM_Nhom3.Controllers
         {
             if (ModelState.IsValid)
             {
-                ViewBag.SuccessMessage = "Thêm tài khoản thất bại";
+                ViewBag.SuccessMessage = "Thêm nhân viên thất bại";
                 ViewBag.RedirectUrl = Url.Action("Create", "Staff");
                 return View(account);
             }
@@ -58,7 +58,7 @@ namespace NMCNPM_Nhom3.Controllers
             _context.TblAccounts.Add(account); // Thêm tài khoản vào DB
             _context.SaveChanges(); // Lưu thay đổi
 
-            ViewBag.SuccessMessage = $"Thêm tài khoản thành công: {account.SAccountName}";
+            ViewBag.SuccessMessage = $"Thêm nhân viên thành công: {account.SAccountName}";
             ViewBag.RedirectUrl = Url.Action("Index", "Staff"); // Chuyển hướng sau khi thêm thành công
             return View(account);
         }
@@ -122,7 +122,7 @@ namespace NMCNPM_Nhom3.Controllers
                 await _context.SaveChangesAsync();
 
              
-                ViewBag.SuccessMessage = "Cập nhật tài khoản thành công!";
+                ViewBag.SuccessMessage = "Cập nhật nhân viên thành công!";
                 ViewBag.RedirectUrl = Url.Action("Index");
 
                 return View(account);
@@ -156,14 +156,14 @@ namespace NMCNPM_Nhom3.Controllers
             var account = _context.TblAccounts.Find(id);
             if (account == null)
             {
-                ViewBag.ErrorMessage = "Tài khoản không tồn tại!";
+                ViewBag.ErrorMessage = "Nhân viên không tồn tại!";
                 return View("Delete"); 
             }
             account.FkIdPermission = 3;
             _context.TblAccounts.Update(account);
             _context.SaveChanges();
 
-            ViewBag.SuccessMessage = "Xoá tài khoản thành công!";
+            ViewBag.SuccessMessage = "Xoá nhân viên thành công!";
             ViewBag.RedirectUrl = Url.Action("Index");
 
             return View("Delete", account);
