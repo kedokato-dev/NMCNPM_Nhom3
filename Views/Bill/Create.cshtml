@@ -32,7 +32,7 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-body">
-                    <form id="billForm" method="post" asp-action="Create" novalidate>
+                    <form id="billForm" method="post" asp-action="Create">
                         <!-- CCCD -->
                         <div class="mb-3">
                             <label for="customerIdCard" class="form-label fw-bold">Số CCCD</label>
@@ -255,21 +255,37 @@
         });
 
         // Nhấn tiếp theo để hiện form tiếp theo
-        $('#nextStepBtn').click(function () {
+           $('#nextStepBtn').click(function () {
         var phone = $('#customerPhone').val().trim();
         var name = $('#customerName').val().trim();
+        var phoneError = $('#phoneError');
+        var nameError = $('#nameError');
 
-        if (!/^[0-9]{10}$/.test(phone) || !/^[A-Za-zÀ-ỹ\s]{2,}$/.test(name)) {
+        var isValid = true;
+
+        if (!/^[0-9]{10}$/.test(phone)) {
+            phoneError.removeClass('d-none');
+            isValid = false;
+        } else {
+            phoneError.addClass('d-none');
+        }
+
+        if (!/^[A-Za-zÀ-ỹ\s]{2,}$/.test(name)) {
+            nameError.removeClass('d-none');
+            isValid = false;
+        } else {
+            nameError.addClass('d-none');
+        }
+
+        if (!isValid) {
             alert("Vui lòng nhập thông tin hợp lệ trước khi tiếp tục!");
             return;
         }
 
-        if ($('#phoneError').hasClass('d-none') && $('#nameError').hasClass('d-none')) {
-            $('#customerName').attr('readonly', true);
-            $('#customerPhone').attr('readonly', true);
-            $('#nextStepBtn').addClass('d-none');
-            $('#billDetails').removeClass('d-none');
-        }
+        $('#customerName').attr('readonly', true);
+        $('#customerPhone').attr('readonly', true);
+        $('#nextStepBtn').addClass('d-none');
+        $('#billDetails').removeClass('d-none');
     });
 
         // Tìm kiếm xe
@@ -367,6 +383,8 @@
         isValid = false;
         errorMessage += 'CCCD phải có đúng 12 chữ số và chỉ chứa số.\n';
         $('#cccdError').removeClass('d-none');
+    }else {
+        $('#cccdError').addClass('d-none');
     }
 
     // Kiểm tra số điện thoại chính
@@ -374,6 +392,8 @@
         isValid = false;
         errorMessage += 'Số điện thoại phải có đúng 10 chữ số và chỉ chứa số.\n';
         $('#phoneError').removeClass('d-none');
+    }else {
+        $('#phoneError').addClass('d-none');
     }
 
     // Kiểm tra số điện thoại mới (nếu form thêm khách hàng đang hiển thị)
