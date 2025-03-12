@@ -437,7 +437,7 @@ namespace NMCNPM_Nhom3.Controllers
             return _context.TblBills.Any(e => e.PkBillCode == id);
         }
         [HttpPost]
-        public async Task<IActionResult> BillInfo(int id)
+        public async Task<IActionResult> BillInfo(int id, double FIncidentalCosts)
         {
             var billCreateStaff = await _context.TblCreateBills.Include(c => c.FkIdUserNavigation).FirstOrDefaultAsync(b => b.FkBillCode == id && b.FkIdUserNavigation.FkIdPermission == 1);
             var billCreateCus = await _context.TblCreateBills.Include(c => c.FkIdUserNavigation).FirstOrDefaultAsync(b => b.FkBillCode == id && b.FkIdUserNavigation.FkIdPermission == 2);
@@ -490,7 +490,7 @@ namespace NMCNPM_Nhom3.Controllers
             ViewBag.dEnd = bill.DEndTime;
             ViewBag.dStart = bill.DBeginTime;
             ViewBag.hours = hours;
-            ViewBag.fIncidentalCosts = bill.FIncidentalCosts??0;
+            ViewBag.fIncidentalCosts = FIncidentalCosts;
             return View();
         }
     }
